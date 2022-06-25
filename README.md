@@ -2,5 +2,6 @@
 A collection of documents related to the p-adic Analogue of the Kazdhan-Lusztig Hypothesis.
 
 ## Links:
-https://www.overleaf.com/9276992272mdgqcgbkgpnp
-https://www.overleaf.com/9486912194hsczywbrbkzy
+Compactification: https://www.overleaf.com/9276992272mdgqcgbkgpnp
+
+Quotient Proofs: https://www.overleaf.com/9486912194hsczywbrbkzy

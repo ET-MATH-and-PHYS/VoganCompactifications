@@ -1,0 +1,25 @@
+\contentsline {chapter}{Contents}{1}{section*.1}%
+\contentsline {chapter}{\chapternumberline {1}The yoga of multi-segments}{3}{chapter.1}%
+\contentsline {section}{\numberline {1.1}The spectral multiplicity matrix}{3}{section.1.1}%
+\contentsline {subsection}{Spectral a-ray-ngments}{3}{section.1.1}%
+\contentsline {subsection}{Multi-segments with multiplicity free support}{4}{equation.1.1.2}%
+\contentsline {chapter}{\chapternumberline {2}The geometry of $GL(n)$}{7}{chapter.2}%
+\contentsline {section}{\numberline {2.1}The reduction of Vogan varieties of $GL(n)$}{7}{section.2.1}%
+\contentsline {subsection}{Geometric a-ray-ngments}{7}{section.2.1}%
+\contentsline {subsection}{The description $V_\lambda $ in the case of a single run}{10}{Item.3}%
+\contentsline {subsection}{Athenian varieties}{11}{Item.3}%
+\contentsline {section}{\numberline {2.2}Explicit descriptions on $V_\lambda $ in extremal cases}{12}{section.2.2}%
+\contentsline {subsection}{The variety $V_\lambda $ in the case of multiplicity free support}{12}{section.2.2}%
+\contentsline {subsection}{The case of determinental varieties}{14}{Item.6}%
+\contentsline {chapter}{\chapternumberline {3}The book of $GL(4)$}{19}{chapter.3}%
+\contentsline {section}{\numberline {3.1}The determinental case}{20}{section.3.1}%
+\contentsline {subsection}{The spectral side}{20}{section.3.1}%
+\contentsline {subsection}{Determination of $V_\lambda , H_\lambda $, and the orbits}{20}{section.3.1}%
+\contentsline {subsection}{Determination of the stabilizers/equivariant fundamental groups}{21}{section.3.1}%
+\contentsline {section}{\numberline {3.2}An "unresolved" case: Zelevinsky's 11.4}{25}{section.3.2}%
+\contentsline {subsection}{The spectral side}{25}{section.3.2}%
+\contentsline {subsection}{The Geometry}{26}{section.3.2}%
+\contentsline {section}{\numberline {3.3}An explicit description of a supercuspidal representation of $GL(2)$}{27}{section.3.3}%
+\contentsline {subsection}{Truths to be worked out}{27}{section.3.3}%
+\contentsline {chapter}{\chapternumberline {4}The groups $SO(n)$}{29}{chapter.4}%
+\contentsline {chapter}{Bibliography}{31}{chapter*.2}%

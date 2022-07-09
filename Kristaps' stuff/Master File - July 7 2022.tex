@@ -1,0 +1,1696 @@
+	\documentclass{memoir}
+	
+	\usepackage[margin=4cm]{geometry}
+
+	\usepackage{amssymb, amsmath, amsthm}
+	\usepackage[all,arc]{xy}
+	\usepackage{bbm} 
+	\usepackage{bookmark}
+	\usepackage{booktabs}
+	\usepackage{cleveref}
+	\usepackage{enumerate}
+	\usepackage{graphics}
+	\usepackage{graphicx}
+	\usepackage{hyperref}
+	\usepackage{mathrsfs}
+	\usepackage{mathtools}
+	\usepackage{multicol}
+	\usepackage[numbers,sort&compress]{natbib}
+	\usepackage{physics}
+	\usepackage{stix}
+	\usepackage{tikz}
+	\usepackage{tikz-cd}
+	\usepackage{titlesec}
+	
+	%This chunk is copy-pasted in order to make "really wide hats". 
+	%The comman is given by \rwh  
+	\usepackage{scalerel,stackengine}
+	\stackMath
+	\newcommand\rwh[1]{%
+		\savestack{\tmpbox}{\stretchto{%
+				\scaleto{%
+					\scalerel*[\widthof{\ensuremath{#1}}]{\kern-.6pt\bigwedge\kern-.6pt}%
+					{\rule[-\textheight/2]{1ex}{\textheight}}%WIDTH-LIMITED BIG WEDGE
+				}{\textheight}% 
+			}{0.5ex}}%
+		\stackon[1pt]{#1}{\tmpbox}%
+	}
+	\parskip 1ex
+	
+	%This next chunk is copy-pasted from Overleaf to make nice Python code.
+	\usepackage{listings}
+	\usepackage[utf8]{inputenc}
+	\usepackage{listings}
+	\usepackage{xcolor}
+	
+	\definecolor{codegreen}{rgb}{0,0.6,0}
+	\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+	\definecolor{codepurple}{rgb}{0.58,0,0.82}
+	\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+	
+	\lstdefinestyle{mystyle}{
+		backgroundcolor=\color{backcolour},   
+		commentstyle=\color{codegreen},
+		keywordstyle=\color{magenta},
+		numberstyle=\tiny\color{codegray},
+		stringstyle=\color{codepurple},
+		basicstyle=\ttfamily\footnotesize,
+		breakatwhitespace=false,         
+		breaklines=true,                 
+		captionpos=b,                    
+		keepspaces=true,                 
+		numbers=left,                    
+		numbersep=5pt,                  
+		showspaces=false,                
+		showstringspaces=false,
+		showtabs=false,                  
+		tabsize=2
+	}
+	
+	\lstset{style=mystyle}
+	
+	\newcommand{\adj}{\dashv}
+	\newcommand{\mc}{\mathcal}
+	\newcommand{\mb}{\mathbb}
+	\newcommand{\mf}{\mathfrak}
+	\newcommand{\di}{\partial}
+	\newcommand{\la}{\left\langle}
+	\newcommand{\ra}{\right\rangle}
+	\newcommand{\lset}{\left\lbrace}
+	\newcommand{\rset}{\right\rbrace}
+	\newcommand{\w}{\wedge}
+	\newcommand{\bw}{\bigwedge}
+	\newcommand{\lb}{\left(}
+	\newcommand{\rb}{\right)}
+	\newcommand{\ba}{\mathbb{A}}
+	\newcommand{\bc}{\mathbb{C}}
+	\newcommand{\bd}{\mathbb{D}}
+	\newcommand{\gf}{\mathbb{F}}
+	\newcommand{\bn}{\mathbb{N}}
+	\newcommand{\bp}{\mathbb{P}}
+	\newcommand{\bq}{\mathbb{Q}}
+	\newcommand{\br}{\mathbb{R}}
+	\newcommand{\bz}{\mathbb{Z}}
+	\newcommand{\sv}{s_{\vec{v}}}
+	\newcommand{\ul}{\underline}
+	\newcommand{\tx}{\text}
+	\newcommand{\ten}{\otimes}
+	\newcommand{\Ten}{\bigotimes}
+	\newcommand{\idl}{\vartriangleleft}
+    \newcommand{\zbar}{\bar{z}}
+    \newcommand{\from}{\leftarrow}
+    \newcommand{\vi}{\varphi}
+	\def\acts{\curvearrowright}
+	
+	\newtheorem{theorem}{Theorem}[section]
+	\newtheorem{lemma}[theorem]{Lemma}
+	\newtheorem{result}[theorem]{Result}
+	\newtheorem{corollary}[theorem]{Corollary}
+	\newtheorem{prop}[theorem]{Proposition}
+	\newtheorem{conjecture}[theorem]{Conjecture}
+	
+	\theoremstyle{definition}
+	\newtheorem{definition}[theorem]{Definition}
+
+	\bibliographystyle{plain}
+	
+	
+	\title{And so begins the actual work towards my thesis}
+	
+	\author{Kristaps J. Balodis}
+  
+  %\makeindex
+	
+	\begin{document}
+		
+		\maketitle
+		
+	\tableofcontents 
+	
+	The main idea behind this document, is that in order to compute either the spectral or geometric multiplicity matrices for $GL_n(F)$, it suffices to compute the multiplicity matrices "run-by-run", which will be explained in the following section.  
+	The proof of this on the spectral side is easily dispatched by a theorem of Zelevinsky \cite{ZelI2}.  
+	On the geometric side, considerably more work is required.  
+	
+	In the respective sections, after establishing the main result, we turn to an analysis of extremal cases, being those of multiplicity free support, and of "complete multiplicity".  
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	\chapter{The yoga of multi-segments}
+	
+	\section{The spectral multiplicity matrix}
+	
+	In this section, we rely on the theory of multi-segments as it appear in \cite{ZelI2} to prove the main result, and explore some examples.  
+	
+	 	\subsection{Spectral a-ray-ngments}
+	 	
+	 In this section, we will show that given some support $S$ of supercuspidal representations, one can group together the representations based on which \emph{rays} (defined below) they belong to, and then furthermore, into \emph{runs} within each ray.  
+	 We then demonstrate that in order to determine the spectral multiplicity matrix for all representations of support $S$, it suffices to determine the multiplicity matrices for the individual runs, treated as the supports of a collection of representations.  
+	 
+	 	\begin{definition}
+	 	Let $\mc{C}_n$ be the collection of (isomorphism classes of) supercuspidal representations of $GL_n(F)$, and define $\mc{C}:=\bigcup_{n\in \bn}\mc{C}_n$.  
+	 	
+	 	For any choice of $\rho\in\mc{C}$, a \emph{ray}\index{run} is 
+	 	%
+	 	$$\{\nu^a\rho | a\in \bz\},$$
+	 	%
+	 	where we consider the elements only up to isomorphism. 
+	 \end{definition}
+ 
+ 	\begin{definition}\label{run}
+ 		Let $S=\{\rho_1, ..., \rho_r\}$ be a multi-set of supercuspidal representations belonging to the same ray.  
+ 		We define a \emph{short run} to be a sub-multi-set $R$ of $S$, such that the underlying set of $R$ determines a segment (when appropriately ordered).  
+ 		We say the a short run $R$ is simply a \emph{run} if no other element of $S-R$ can be added to $R$ while having in remain a run.  
+ 	\end{definition}
+	
+	Suppose $a_1, ..., a_s$ are distinct runs (allowing for the possibility they even belong to distinct rays), and set $a=a_1+a_2+... +a_s$. 
+	By \emph{Theorem 8.6,} \cite{ZelI2}, we know that
+	%
+	$$\la a\ra=\la a_1\ra\times \la a_2\ra\times... \times\la a_s\ra.$$
+	
+	Indeed, we can also compute that 
+	%
+	$$\pi(a)=\pi(a_1)\times... \times \pi(a_s).$$
+	
+	
+	Writing $a_i=\sum_{j=1}^{k_i}m(b_{ij};a_i)\la b_{ij}\ra$, we find that 
+	%
+	\begin{align}
+		\pi(a)&=\lb \sum_{j=1}^{k_1}m(b_{1j};a_1)\la b_{1j}\ra\rb\times... \times\lb \sum_{j=1}^{k_s}m(b_{sj};a_s)\la b_{sj}\ra\rb\\
+		&=\sum_{(j_1, ..., j_s)} m(b_{1j_1};a_1)\cdot... \cdot m(b_{s,j_s};a_s) \la b_{1j_1}\ra\times... \times\la b_{sj_s}\ra.\label{SpecRay}
+	\end{align} 
+	
+	The factors of each term
+	%
+	$$\la b_{1j_1}\ra\times... \times\la b_{sj_s}\ra,$$
+	%
+	belong to different runs, none of them can be linked.    
+	Hence by \emph{Theorem 8.5}, \cite{ZelI2} we know that 
+	%
+	$$\la b_{1j_1}\ra\times... \times\la b_{sj_s}\ra=\la b_{1j_1}+... +b_{sj_s}\ra.$$
+	
+	Namely, we know that each term is irreducible.  
+	Therefore, it suffices to separately determine the multiplicities $m(b_{ij};a_i)$ for each $1\leq i \leq s$ and $1\leq j\leq k_i$.  
+	In other words, one need only consider the multi-segments belonging to a single run.  
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	\subsection{Multi-segments with multiplicity free support}
+	
+	Having demonstrated that it suffices to determine the multiplicity matrix run-by-run, we now turn to extreme of examples of the multiplicities of a given run.  
+	First, in this section, we turn to the case of \emph{multiplicity free support}.  
+	
+	Let $a$ be a multi-segment with multiplicity free support.  
+	In other words, for each $i\neq j$ we have $\Delta_i\cap \Delta_j=\emptyset$.  
+	Let 
+	%
+	$$a_{\tx{min}}=\{\Delta_1, ..., \Delta_r\}, \ \ \ \ \ \ \ a_{\tx{max}}=\{[\rho], ..., [\rho']\},$$
+	%
+	be the respectively minimal and maximal elements below and above $a$ in the simple operations ordering on multi-segments.  
+	
+	Since the multi-segments have multiplicity free support, the segments (which are singletons) of $a_{\tx{max}}$ are all disjoint.  
+	
+ 	Suppose $d=\{\Delta_1', ..., \Delta_s'\}$ is a multi-segment where each pair of segments have empty intersection. 
+ 	If $\Delta_i'$ and $\Delta_j'$ are linked, then consider the multi-segment $b$ obtained by applying the elementary operation to $\Delta_i'$ and $\Delta_j'$.  
+ 	By assumption $\Delta_i'\cap\Delta_j'=\emptyset$, and thus
+ 	
+ 	%
+ 	\begin{align*}
+ 	b&=\{\Delta_1', ..., \Delta_{i-1}', \Delta_i'\cup\Delta_j', \Delta_{i+1}',  ... \Delta_{j-1}, \Delta_i'\cap \Delta_j', \Delta_{j+1}', ..., \Delta_s'\}\\
+ 	&=\{\Delta_1', ..., \Delta_{i-1}', \Delta_i'\cup\Delta_j', \Delta_{i+1}',  ... \Delta_{j-1}, \emptyset, \Delta_{j+1}', ..., \Delta_s'\}\\
+ 		&=\{\Delta_1', ..., \Delta_{i-1}', \Delta_i'\cup\Delta_j', \Delta_{i+1}',  ... \Delta_{j-1}, \Delta_{j+1}', ..., \Delta_s'\}.
+ 	\end{align*}
+ 	
+ 	Suppose $\Delta_k''$ and $\Delta_l''$ are multi-segments of $b$ with non-empty intersection.  
+ 	If $\Delta_k''$ and $\Delta_l''$ are both segments of $a$ as well, this is a contradiction.  
+ 	Otherwise, Wlog $\Delta_k''=\Delta_i'\cup\Delta_j'$, and $\Delta_l''$ is not.  
+ 	Hence, $\Delta_l''$ is a segment of $d$, and thus $\Delta_l''=\Delta_m'$ for some $m\neq i, j$.  
+ 	If it were the case that $\Delta_l''=\Delta_m'$ had non-empty intersection with $\Delta_k''=\Delta_i'\cup\Delta_j'$, then it must be the case that $\Delta_m'$ has non-empty intersection with either $\Delta_i'$ or $\Delta_j'$, which would be contrary to our assumption on $d$.  
+ 	Thus, given a multi-segment with disjoint segments, and multi-segment obtained from it by elementary operations will also contain disjoint segments.  
+ 	
+ 	Returning to ours segment $a$, by successively applying the above argument to $a_{\tx{max}}$, it must be that the segments of $b$ are pair-wise disjoint for all multi-segment of the support of $a$.    
+ 	Therefore, by \emph{proposition 9.13} of \cite{ZelI2}, we conclude that in $\mf{R}(G)$
+ 	%
+ 	$$\pi(b)=\sum_{d\leq b}\la d\ra.$$
+ 	
+ 	Thus, the geometric multiplicity matrix, indexed by segments obtained from $a_{\tx{max}}$, has the form 
+ 	%
+ 	\begin{align}
+ 		m(b;a)&=\begin{cases}
+ 		1, & b\leq a\\
+ 		0, & \tx{else.}
+ 	\end{cases}\label{m-free-spec}
+ \end{align}
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 	\chapter{The geometry of $GL(n)$}
+
+
+		\section{The reduction of Vogan varieties of $GL(n)$}
+	
+	
+	
+	In this section, we describe several ways in which the study of Vogan varieties $V_\lambda$ for infinitesimal parameters $\lambda$ of $GL_n(F)$ over a $p$-adic field $F$ may be reduced to simpler cases.  
+	
+	In the first section, we demonstrate that one need only determine $V_\lambda$ and it's corresponding multiplicity matrix $m_{\tx{geo}}^\lambda$ in the case where the cuspidal support of $\lambda$ belongs to a single \emph{run} (defined below).  
+	While this is not articulated explicitly, we believe that this is a manifestation of Bernstein decomposition on the "geometric side".
+	
+	In the second section, we prove that given an infinitesimal parameter $\lambda$ of $GL_{dN}(F)$ whose cuspidal support belongs to a single run, determined by a supercuspidal representation whose infinitesimal parameter has dimension $d$, there exist an (unramified) infinitesimal parameter $\lambda^\flat$ of $GL_N(F)$ whose cuspidal support consists entirely of (unramified) characters, such that $V_\lambda\cong V_{\lambda_\flat}$ as varieties, and $\tx{Per}_{H_\lambda}(V_\lambda)\cong\tx{Per}_{H_{\lambda^\flat}}(V_{\lambda^\flat})$.  
+	
+	Recently, Clifton has dubbed the varieties $V_{\lambda^\flat}$ "Athena" or "Athenian" varieties, as they simply "popped" out of Kristaps' head in much the same way Athena sprung forth from Zeus' head.  
+	It is expected that $\lambda^\flat$ is simply $\lambda_{ur}$ as it appears in \cite{Cun}, and that this procedure will allow one to easily generalize previous results of Connor Riddlesden on orbits and their duals, and hence generalize results of Mishty Ray on ABV-packets.  
+	
+	\subsection{Geometric a-ray-ngments}
+	
+	Given a supercuspidal representation $\rho$ of $GL_m(F)$, the \emph{ray} or \emph{line} determined by $\rho$ is the set of ( \tx{iso}morphism classes of elements of) 
+	%
+	$$\{\nu^k\rho : k\in \bz\}.$$
+	
+	A \emph{run} is a finite subset $R$ of a ray such that if $\nu^l\rho, \nu^n\rho\in R$ with $l\leq n$, then (the isomorphism class of) $\nu^k\rho$ is in $R$ for all $k$ such that $l\leq k\leq n$.  
+	
+	Consider a finite collection of supercuspidals 
+	%
+	$$\{\rho_{11}, \rho_{12}, ..., \rho_{1,m_1}, \rho_{2,1},  \rho_{2, 2}, ..., \rho_{s, m_s}\},$$
+	%
+	in such a way that for any $(i,j), (k, l)$ we know that $i=k$ if and only if $\rho_{i,j}$ and $\rho_{k,l}$ belong to the same run.  Writing the infinitesimal parameters as $\sigma_{ij}:=\lambda_{\rho_{ij}}$, we have 
+	%
+	$$\lambda=\bigoplus_{i,j}\sigma_{i,j}.$$
+	
+	Note that if $\rho$ and $\rho'$ belong to the same run, then $\rho=\nu^k\rho'$ for some $k\in \bz$, hence for the associated infinitesimal parameters $\lambda_\rho=\nu^k\lambda_{\rho'}$.  
+	In particular, the dimension $d_i$ of any infinitesimal parameter $\sigma_{ij}$ will be the same for fixed $i$ and valid choices of $j$.  
+	We will write each $X\in V_\lambda$ and $\lambda(w)$ in block-form where the $((i, j), (k,l))^{\tx{th}}$ block is 
+	%
+	$$(\dim\sigma_{ij})\times\dim\sigma_{kl}.$$
+	
+	The defining equation for $X\in V_\lambda$ is
+	%
+	$$\tx{Ad}(\lambda(w))X=\nu(w)X, \ \ \ \ \ \ \forall w\in W_F.$$
+	%
+	Since $\lambda(w)$ is diagonal, the condition on each block becomes that for all $w\in W_F$
+	%
+	$$\sigma_{ij}(w)X_{(ij),(kl)}\sigma_{kl}^{-1}(w)=\nu(w)X_{(ij),(kl)}\Rightarrow \sigma_{(ij)}(w)X_{(ij),(kl)}=X_{(ij),(kl)}\nu\sigma_{(kl)}(w).$$
+	
+	Therefore, we may realize each block $X_{(ij),(kl)}$ as an intertwining operator for $\sigma_{(ij)}$ and $\nu\sigma_{(kl)}$.  
+	As it's not possible, by definition, for infinitesimal parameters arising from distinct runs to be isomorphic to a single twist of $\nu$ of each other, this is only possible when $i=k$.  
+	Thus, we may re-write $X\in V_\lambda$ in terms of different blocks $X_{ij}$ of size $(m_i\dim \lambda_{\rho_{i,-}})\times( m_j\dim\lambda_{\rho_{j,-}})$.  
+	Then, by the above argument $X_{ij}=0$ for $i\neq j$.
+	
+	Applying an entirely similar argument, we can partition $g\in H_\lambda$ in the same manner as above to find that $g_{ij}=0$ unless $i=j$.  
+	Therefore, the action of $H_\lambda$ on $V_\lambda$ is given by 
+	%
+	$$\begin{bmatrix}
+		g_{11} & 0 & ... & 0 \\
+		0 & g_{22} & ... & 0 \\
+		... & & & ... \\
+		0 & 0 & ... & g_{ss}
+	\end{bmatrix}\cdot \begin{bmatrix}
+		X_{11} & 0 & ... & 0 \\
+		0 & X_{22} & ... & 0 \\
+		... & & & ... \\
+		0 & 0 & ... & X_{ss}
+	\end{bmatrix}= \begin{bmatrix}
+		g_{11}X_{11}g_{11}^{-1} & 0 & ... & 0 \\
+		0 & g_{22}X_{22}g_{22}^{-1} & ... & 0 \\
+		... & & & ... \\
+		0 & 0 & ... & g_{ss}X_{ss}g_{ss}^{-1}
+	\end{bmatrix}.$$
+	
+	Thus, writing 
+	%
+	$$\lambda_i=\bigoplus_{j=1}^{m_i}\lambda_{\rho_{ij}},$$
+	%
+	for each $i\in\{1, ..., s\}$, we can identify
+	%
+	$$V_\lambda\cong V_{\lambda_1}\times V_{\lambda_2}\times... V_{\lambda_s},$$
+	%
+	and 
+	%
+	$$H_\lambda\cong H_{\lambda_1}\times H_{\lambda_2}\times... \times H_{\lambda_s},$$
+	%
+	where the action is given by 
+	%
+	$$(g_1, ..., g_s)\cdot(x_1, ..., x_s)=(g_1x_1g_1^{-1}, ..., g_sx_sg_s^{-1}).$$
+	
+	Thus every orbit $C$ of $V_\lambda$ decomposes as 
+	%
+	$$C=C_1\times C_2\times... \times C_s.$$
+	
+	We also note that for all $X=(x_1, ..., x_s)\in V_\lambda$,
+	%
+	$$\frac{\tx{Stab}_{H_\lambda}(X)}{\tx{Stab}_{H_\lambda}(X)^0}\cong\lb \frac{\tx{Stab}_{H_{\lambda_1}}(x_1)}{\tx{Stab}_{H_{\lambda_1}}(x_1)^0}\rb\times...\times\lb \frac{\tx{Stab}_{H_{\lambda_s}}(x_s)}{\tx{Stab}_{H_{\lambda_s}}(x_s)^0}\rb.$$
+	
+	Thus, for any orbit $C=C_1\times... \times C_s$ and $X=(x_1, ..., x_s)\in C$ we have
+	%
+	$$\pi_{H_\lambda}^{\tx{\'et}}(C, x)\cong \bigoplus_{i=1}^s\pi_{H_{\lambda_i}}^{\tx{\'et}}(C_i, x_i).$$
+	
+	In a later section I will demonstrate that $H_{\lambda_i}$ for a single run is itself isomorphic to a product of some copies of $GL$'s of varrying size, and the stabilizer of any point will be isomorphic to a product of stabilizers within each $GL$.  
+	By the argument in \emph{Lemma 3.6.3} \cite{Chr}, the stabilizer of any point under $GL$ conjugation is connected. 
+	Therefore, the only irreducible $H_{\lambda_i}$-equivariant sheaves on a given orbit is the trivial one. 
+	
+	From now on, for each constituent $V_{\lambda_i}$ of $V_\lambda$, we will write the $s_i$ orbits as $C_{ij}$.  
+	Therefore, every orbit $C$ of $V_\lambda$ may be written as
+	%
+	$$C_{j_1,..., j_s}=C_{1j_1}\times... C_{sj_s}.$$
+	
+	As a short-hand, we define $\mathbbm{1}_{ij}:=\mathbbm{1}_{C_{ij}}$, and $\mathbbm{1}_{j_1, ..., j_s}:=\mathbbm{1}_{C_{j_1, ..., j_s}}$.   
+	From \cite{Ach}, we know that there's a functor 
+	%
+	$$\boxtimes:D_G^b(X, \bc)\times D_H^b(Y, \bc)\to D_{G\times H}^b(X\times Y, \bc).$$
+	
+	I conjecture that for every $C_{j_1, ..., j_s}$ of $V_\lambda$,
+	%
+	$$\mathbbm{1}_{j_1, ..., j_s}\cong\mathbbm{1}_{1,j_1}\boxtimes... \boxtimes\mathbbm{1}_{s,j_s},$$
+	%
+	which should follow from \emph{Lemma 3.3.14}, \cite{Ach}, or the results leading up to it.  
+	Speaking of \emph{Lemma 3.3.14}, it does tell us that for any $C_{j_1,..., j_s}$ of $V_\lambda$, and any finite-type local systems $\mc{L}_{i,j_i}$ on each $C_{i,j_i}$,
+	%
+	$$IC(C_{1,j_1}, \mc{L}_{1,j_1})\boxtimes... \boxtimes IC(C_{s,j_s}, \mc{L}_{s,j_s})\cong IC(C_{1,j_1}\times... \times C_{s,j_s}, \mc{L}_{1,j_1}\boxtimes... \boxtimes\mc{L}_{s,j_s}).$$
+	
+	Suppose on faith, just for the time being, that
+	%
+	\begin{enumerate}
+		\item The only irreducible equivariant local systems on Vogan varieties of $GL(n)$ are the trivial ones (which I believe I know that proof, I only have to write it down above),
+		\item $\mathbbm{1}_C\cong \mathbbm{1}_{1,j_1}\boxtimes... \boxtimes\mathbbm{1}_{s,j_s}$,\\
+		for every orbit $C=C_{1,j_1}\times... \times C_{s,j_s}$, (with appropriate shifts),
+		\item The distributivity of $\boxtimes$ over $\oplus$ for (perverse) sheaves (and/or local systems).
+	\end{enumerate}
+	
+	Then, writing the multiplicity of $\mathbbm{1}_{i,j_i}$ in $IC(C_{i,k_i})$ as $m_{j_i,k_i}$, we find that
+	%
+	\begin{align*}
+		IC(\mathbbm{1}_{j_1, ..., j_s})&=IC(C_{1,j_1}\times... \times C_{s,j_s}, \mathbbm{1}_{1,j_1}\boxtimes... \boxtimes\mathbbm{1}_{s,j_s})\\
+		&=IC(C_{1,j_1}, \mathbbm{1}_{1,j_1})\boxtimes... \boxtimes IC(C_{s,j_s}, \mathbbm{1}_{C_s})\\
+		&=\left[\sum_{k_1}m_{k_1, j_1}\mathbbm{1}_{1,k_1}\right]\boxtimes... \boxtimes\left[\sum_{k_s}m_{k_s,j_s}\mathbbm{1}_{s,k_s}\right]\\
+		&=\sum_{(k_1, ..., k_s)}m_{k_1,j_1}\cdot... \cdot m_{k_s,j_s}\lb\mathbbm{1}_{1,k_1}\boxtimes... \boxtimes \mathbbm{1}_{s,k_s}\rb\\
+		&=\sum_{(k_1, ..., k_s)}m_{k_1,j_1}\cdot... \cdot m_{k_s,j_s}\cdot \mathbbm{1}_{k_1, ..., k_s},
+	\end{align*}
+	%
+	where the sum is in the Grothendieck group, and taken over all valid choices of $(k_1, ..., k_s)$.  
+	
+	Therefore, we see that in order to compute the geometric multiplicity matrix of $V_\lambda$, it suffices to compute the multiplicity matrices of each of the constituent $V_{\lambda_i}$.  
+	
+	Note that the implication is that as categories?
+	%
+	$$\tx{Per}_{H_\lambda}(V_\lambda)\cong\tx{Per}_{H_{\lambda_1}}(V_{\lambda_1})\ten... \ten\tx{Per}_{H_{\lambda_s}}(V_{\lambda_s}),$$
+	%
+	which, on the spectral side predicts that there exists an equivalence of Grothendieck groups
+	%
+	$$\mf{R}^\lambda(G)\cong\mf{R}^{\lambda_i}(G)\ten... \ten\mf{R}^{\lambda_s}(G).$$
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	\subsection{The description $V_\lambda$ in the case of a single run}
+	
+	The goal of this section is to prove that on the geometric side, we may reduce to the case of Vogan varieties whose infinitesimal parameters have cuspidal supports only consisting of characters (and by the previous section, those characters need only belong to a single run).  
+	
+	To be more specific, consider an infinitesimal parameter $\lambda$ of $GL_{dN}(F)$ corresponding to a single run, determined by a cuspidal representation $\rho$ whose infinitesimal parameter $\lambda_{\rho}$ is of dimension $d$, and for which the respective multiplicities of succesive twists $\nu^i\rho$ are given by $m_0, ..., m_i, ..., m_s$.  
+	We will show that there is an isomorphism between $\tx{Per}_{H_\lambda}(V_\lambda)$ and $\tx{Per}_{H_{\lambda^\flat }}(V_{\lambda^\flat})$ where $V_{\lambda^\flat}$ is a Vogan variety attached to $GL_N(F)$, attached to an infinitesimal parameter $\lambda^\flat$ whose cuspidal support strictly contains the characters $1, \nu, ..., \nu^s$ (potentially with multiplicity).  
+	
+	
+	As we've seen, we can reduce to the case where for some infinitesimal parameter\\
+	$\lambda:W_F\to GL_n(\bc)$ has support $S$ whose elements belong to a single run.  
+	Thus, we can organize the support such that it has the form
+	%
+	$$S=\{\rho_{00}, ..., \rho_{0, m_0}, ..., \rho_{s, m_s}\},$$
+	%
+	where $\rho_{ij}=\nu^i\rho$ for some fixed supercuspidal representation $\rho$.  
+	
+	Writing $\sigma_{ij}$ for the infinitesimal parameter of $\rho_{ij}$ as in the previous question, and each $X\in V_\lambda$ and $\lambda(w)$ in $(\dim\sigma)\times(\dim\sigma)$ blocks, the defining equation for $V_\lambda$ becomes that for all $w\in W_F$, the $(i,j)^{\tx{th}}$ block satisfies
+	%
+	\begin{align*}
+		&\sigma_{ij}(w)X_{(ij),(kl)}=X_{(ij),(kl)}\nu\sigma_{kl}(w)\\
+		\Rightarrow&\nu^i\sigma(w)X_{(ij),(kl)}=X_{(ij),(kl)}\nu\nu^k\sigma(w)\\
+		\Rightarrow & \nu^i\sigma(w)X_{(ij),(kl)}=X_{(ij),(kl)}\nu^{k+1}\sigma(w).
+	\end{align*}
+	
+	Therefore we may realize $X_{(ij),(kl)}$ as an intertwining operator for $\nu^i\sigma$ and $\nu^{k+1}\sigma$.  
+	Hence, $X_{(ij),(kl)}$ will be zero unless $\nu^i\sigma\cong\nu^{k+1}\sigma$, in which case $i=k+1$.  
+	Note that in this case, $X_{(ij),(kl)}$ be only be a scalar matrix of size $d:=\dim\sigma$, and may be any such scalar matrix.  
+	Hence, each element $X\in V_\lambda$ may be written in block-form
+	%
+	$$X=\begin{bmatrix}
+		0 & 0 & 0 & ... & 0 & 0 & 0 \\
+		X_{21} & 0 & 0 & ... & 0 & 0 & 0 \\
+		0 & X_{32} & 0 & ... & 0 & 0 & 0 \\
+		... & & & ... & & & ... \\
+		0 & 0 & 0 & ... & 0 & X_{s+1,s} & 0 
+	\end{bmatrix},$$
+	%
+	where $X_{i+1, i}$ is a $(dm_i\times dm_{i-1})$ block, which itself may be written in terms of $(d\times d)$ blocks 
+	%
+	$$X_{m_i, m_{i-1}}=\begin{bmatrix}
+		Y_{11}^i & Y_{12}^i & ... & Y_{1, m_{i-1}}^i\\
+		Y_{21}^i & Y_{22}^i & ... & Y_{2, m_{i-1}}^i \\
+		... & & ... & ...\\
+		Y_{m_i, 1}^i & ... & ... & Y_{m_i, m_{i-1}}^i
+	\end{bmatrix},$$
+	%
+	where each $Y_{jk}^i$ is a scalar matrix.  
+	Like-wise, each $g\in H_\lambda$ may be written as 
+	%
+	$$G=\begin{bmatrix}
+		G_1 & 0 & ... & 0 \\
+		0 & G_2 & ... & 0 \\
+		... & & ... & ...\\
+		0 & 0 & ... & G_{s+1}
+	\end{bmatrix}\in GL_{(m_0+... +m_s)d}(\bc),$$
+	%
+	where $G_i\in GL_{m_{i-1}}(\bc)$, which can be further written in $(d\times d)$ blocks
+	%
+	$$G_i=\begin{bmatrix}
+		H_{11}^i & ... & H_{1,m_{i-1}}^i \\
+		... & ... & ... \\
+		H_{m_{i-1}, 1}^i & ... & H_{m_i, m_{i-1}}^i
+	\end{bmatrix},$$
+	%
+	where $H_{jk}^i$ is any scalar matrix such that $G_i\in G_{m_{i-1}}(\bc)$. 
+	
+	
+	\subsection{Athenian varieties}
+	
+	Given the support $S$ of the previous sub-section, we form a new multi-set $S^\flat$ which consists precisely of the characters $\nu^i$ occurring with multiplicity $m_i$.  
+	Let $\lambda^\flat$ be the infinitesimal parameter with support $S^\flat$, then by the results of the previous section, each $x\in V_{\lambda^\flat}$ is of the form
+	%
+	$$x=\begin{bmatrix}
+		0 & 0 & 0 & ... & 0 & 0 & 0 \\
+		x_{21} & 0 & 0 & ... & 0 & 0 & 0 \\
+		0 & x_{32} & 0 & ... & 0 & 0 & 0 \\
+		... & & & ... & & & ... \\
+		0 & 0 & 0 & ... & 0 & x_{s+1,s} & 0 
+	\end{bmatrix}\in V_{\lambda^\flat},$$
+	%
+	where $x_{i,i-1}$ is a block
+	%
+	$$X_{i, i-1}=\begin{bmatrix}
+		y_{11}^i & y_{12}^i & ... & y_{1, m_{i-1}}^i\\
+		y_{21}^i & y_{22}^i & ... & y_{2, m_{i-1}}^i \\
+		... & & ... & ...\\
+		y_{m_i, 1}^i & ... & ... & y_{m_i, m_{i-1}}^i
+	\end{bmatrix}$$
+	%
+	size $(m_i\times m_{i-1})$ for $i\in \{1, 2, ..., s\}$, 
+	and each $g\in H_{\lambda^\flat}$ is of the form
+	%
+	$$g=\begin{bmatrix}
+		g_1 & 0 & ... & 0 \\
+		0 & g_2 & ... & 0 \\
+		... & & ... & ...\\
+		0 & 0 & ... & g_{s-1}
+	\end{bmatrix}\in GL_{(m_0+... +m_s)}(\bc),$$
+	%
+	where $g_i\in GL_{n_0}(\bc)$, can be written as 
+	%
+	$$g_i=\begin{bmatrix}
+		h_{11}^i & ... & h_{1,m_{i-1}}^i \\
+		... & ... & ... \\
+		h_{m_{i-1}, 1}^i & ... & h_{m_i, m_{i-1}}^i
+	\end{bmatrix}$$ 
+	
+	Define the isomorphism of varieties $\vi:V_{\lambda^\flat}\to V_\lambda$ such that for any $x\in V_{\lambda^\flat}$ and its corresponding $y_{jk}^i$, the block $Y_{jk}^i$ of the image $\vi(x)$ is $y_{jk}^i I_{d,d}$.  
+	Like-wise, we define an isomorphism of algebraic groups $\psi:H_{\lambda^\flat}\to H_\lambda$ such that $g\in H_\lambda\subseteq GL_N(\bc)$ gets sent to the element $G\in H_\lambda\subseteq GL_{dN}(\bc)$ with sub-blocks $H_{jk}^i=h_{jk}^i I_{d,d}$. 
+	
+	The fact that these are indeed isomorphisms, and that $\vi$ is equivariant in the sense that for all $x\in V_{\lambda^\flat}$ and $g'\in H_{\lambda^\flat}$, we have
+	%
+	$$\vi\lb \psi(g')\cdot x\rb=\psi(g')\cdot\vi(x),$$
+	%
+	is intuitively "obvious", though I do plan to write out the relatively trivial but tedious details eventually. 
+	
+	Therefore $\tx{Per}_{H_{\lambda^\flat}}(V_{\lambda^\flat})\cong\tx{Per}_{H_\lambda}(V_{\lambda})$, and the rest of the claims of the introduction to this section follow by the local Langlands correspondence.  
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	\section{Explicit descriptions on $V_\lambda$ in extremal cases}
+
+	\subsection{The variety $V_\lambda$ in the case of multiplicity free support}
+	
+	Now that we seen that the computation of the geometric multiplicity matrix may always be carried out run-by-run, we will turn to an examination of some of the extremal cases of the multiplicities of a run.  
+	In this section, we will analyze the case of multiplicity-free support, and see that it agrees with the expectations of our computations on the spectral side, and the $p$-KLH.  
+	
+	Suppose $S=\{\rho_1, ..., \rho_r\}$ is a finite collection of supercuspidal representations such that $\rho_i\ncong\rho_j$ for $i\neq j$.  
+	Writing $\sigma_i$ for the infinitesimal parameter of $\rho_i$, by the previous section we know that any representation with support $S$ has the infinitesimal parameter
+	%
+	$$\lambda=\bigoplus_{i=1}^r\sigma_i.$$
+	
+	The only block of $X\in V_\lambda$ which can be non-zero are precisely those $X_{ij}$ for which $\sigma_i\cong\vu\sigma_j$.  
+	In this case $X_{ij}$ can be any non-zero scalar matrix.  
+	
+	Like-wise, we see that for any $g\in H_\lambda$, the only blocks that can be non-zero are $g_{ii}$, each such block must be a scalar matrix (and such is valid), and since $g\in GL_n(\bc)$, each of the diagonal blocks must actually be non-zero.  
+	
+	Adopting the simplified notation $g_i:=g_{ii}$, we find that the action of $H_\lambda$ on $V_\lambda$ is given by 
+	%
+	\begin{align*}
+		g\cdot X &=\begin{bmatrix}
+			g_1 & 0 & 0 & ... & 0 & 0 \\
+			0 & g_2 & 0 & ... & 0 & 0\\
+			... & & & & & ... \\
+			0 & 0 & 0 & ... & 0 & g_r
+		\end{bmatrix}\begin{pmatrix}
+			0 & 0 & 0 & 0 & ... & 0 \\
+			X_{21} & 0 & 0 & ... & 0 & 0\\
+			... & & & & & ...\\
+			0 & 0 & 0 & ... & X_{r,r-1} & 0
+		\end{pmatrix}\begin{bmatrix}
+			g_1^{-1} & 0 & 0 & ... & 0 & 0 \\
+			0 & g_2^{-1} & 0 & ... & 0 & 0\\
+			... & & & & & ... \\
+			0 & 0 & 0 & ... & 0 & g_r^{-1}
+		\end{bmatrix}\\
+		&=\begin{pmatrix}
+			0 & 0 & 0 & 0 & ... & 0 \\
+			g_2X_{21}g_1^{-1} & 0 & 0 & ... & 0 & 0\\
+			... & & & & & ...\\
+			0 & 0 & 0 & ... & g_rX_{r,r-1}g_{r-1}^{-1} & 0
+		\end{pmatrix}
+	\end{align*}
+	
+	Thus, we see that for any $g\in H_\lambda$ applied to some $X\in V_\lambda$, we see that the $(i,j)^{\tx{th}}$ block of $X_{ij}$ is non-zero iff the $(i,j)^{\tx{th}}$ block of $g\cdot X$ is non-zero.  
+	
+	Given $X\in V_\lambda$, if $X_{21}=0$ set $g_1=I$, otherwise set $g_1=X_{21}$.  
+	In either case set $g_2=I$.  
+	Now supposing we've defined $g_j$ for each $j\leq i$, for some $i\geq 2$.  
+	If $X_{i+1,i}=0$ set $g_{i+1}=I$, otherwise set $g_{i+1}=g_1X_{21}^{-1}$.
+	
+	Therefore, for the action of $g\cdot X$, either the block $X_{ij}$ was zero and the block $[g\cdot X]_{ij}$ will remain zero, or $X_{ij}$ is non-zero, where $j=i-1$, and the block $[g\cdot X]_{i, i-1}=I$. 
+	Thus we see that $H_\lambda$ is transitive among any $X\in V_\lambda$ with fixed choices of non-zero blocks.  
+	Therefore, for those $i$, say $i_1, ..., i_m$ such that $X_{i+1,i}$ can be nonzero, an orbit is simply a choice of which block will be non-zero.  
+	That is, there are $2^m$ orbits in total.  
+	
+	The above argument also tells us that for each orbit, we can choose the representative to be given by setting $X_{i+1,i}=I$ for those blocks we're choosing to be non-zero.  
+	Thus, the stabilizer of a any point will simply have $g_{i+1}=g_i$ for those $i$ for which $X_{i+1,i}$ is non-zero.  
+	Therefore, suppose there are $l$ blocks which are non-zero, then the stabilizer of a point in that orbit is isomorphic to $(\bc^\times)^l$, which is connected.  
+	Therefore 
+	%
+	$$\pi_{H_\lambda}^{\tx{\'et}}(C, X)=\frac{\tx{Stab}_{H_\lambda}(X)}{\tx{Stab}_{H_\lambda}(X)^0}\cong 0,$$
+	%
+	hence, on each orbit there is a single simple $H_\lambda$-equivariant local system.  
+	
+	Moreover, any orbit with $l$ non-zero blocks will be isomorphic to $(\bc^\times)^l$, whose closure in $V_\lambda\cong \ba_\bc^m$ is simply $\bc^l$, which is smooth.  
+	Thus, recalling our basic results on perverse sheaves
+	%
+	\begin{enumerate}
+		\item $IC(\mc{L}_C)|_C=\mc{L}(C)[\dim C]$,
+		\item If $\bar{C}$ is smooth, then $IC(\mathbbm{1}_C)|_{C'}=\begin{cases}
+			\mathbbm{1}_{C'}[\dim C], & C'\subseteq \bar{C}\\
+			0, & \tx{otherwise}
+		\end{cases}$
+		\item $IC(\mc{L}_C)|_{C'}=0$ if $C'\not\subseteq \bar{C}$. 
+	\end{enumerate}  
+	
+	Taking the total dimension of the stalks of sheaves to obtain the entries of $m_{\tx{geo}}^\lambda$, we can also label the matrix by non-$\leq$-decreasing orbits, in which case the $p$KLH is verified in comparison with our result \ref{m-free-spec}. 
+	
+
+
+
+
+
+
+	
+	
+	
+	
+	
+	
+	\subsection{The case of determinental varieties}
+	
+	In this subsection, we consider the Vogan varieties which correspond to \emph{Example 11.3} of Zelevinksy's \cite{ZelI2}.  
+	In this case, the strata of $V_\lambda$ are all \emph{determinental varieties}, which has come to be known as the "Tom Braden" case by the Voganish group. 
+	
+	Consider a support of the form
+	%
+	$$S=\lset\underbrace{\rho, ..., \rho}_{k \tx{ times}}, \underbrace{\nu\rho, ..., \nu\rho}_{l \tx{ times}}\rset.$$
+	
+	Let $\sigma_i$ be the infinitesimal parameter $\lambda_\rho$ of $\rho$ for $1\leq i \leq k$, and $\sigma_j:=\nu\lambda_\rho$ for $k+1\leq j\leq k+l$, and set $r=\dim \lambda_\rho$.  
+	Any representation with support $S$ has infinitesimal parameter
+	%
+	$$\lambda=\bigoplus_{i=1}^{k+l}\sigma_i.$$
+	
+	Writing $X\in V_\lambda$ in $r$ by $r$ blocks, from \ref{Vog} we know that $X_{ij}$ is non-zero iff $\sigma_i\cong\nu\sigma_j$. 
+	This is possible if, and only if $1\leq i \leq k$ and $k+1\leq j\leq k+l$.
+	For each such choice of $i$ and $j$, it must be that that $X_{ij}$ is a scalar matrix.  
+	
+	An entirely similar argument shows us that $(i,j)^{\tx{th}}$ block of $g\in H_\lambda$ can be non-zero iff $\sigma_i\cong\sigma_j$.  
+	That is, the only (potential) non-zero blocks are $g_{ij}$ for $1\leq i, j\leq k$ and $k+1\leq i, j\leq k+l$.  
+	In any such case, $g_{ij}$ is an intertwining operator, and thus a scalar matrix.  
+	Therefore, the element of $H_\lambda$ can be written in blocks
+	%
+	$$g=\begin{bmatrix}
+		A_{kr,kr} & 0_{kr,lr}\\
+		0_{lr,kr} & B_{lr,lr}
+	\end{bmatrix}=\begin{bmatrix}
+	A & 0 \\
+	0 & B
+\end{bmatrix},$$
+	%
+	where $A$ and $B$ are composed of $r$-by-$r$ blocks, subject to the condition that $g\in GL_{(k+l)r}(\bc)$.    
+	Writing $X\in V_\lambda$ as 
+	%
+	$$X=\begin{bmatrix}
+		0_{k,k} & 0_{k,l}\\
+		Z_{l,k} & 0_{l,l}
+	\end{bmatrix}=\begin{bmatrix}
+	0 & 0 \\
+	Z & 0
+\end{bmatrix}$$
+	%
+	the action of $H_\lambda$ on $V_\lambda$ is given by 
+	%
+	$$\begin{bmatrix}
+		A & 0 \\
+		0 & B
+	\end{bmatrix}\begin{bmatrix}
+	0 & 0 \\
+	Z & 0 
+\end{bmatrix}\begin{bmatrix}
+A^{-1} & 0 \\
+0 & B^{-1}
+\end{bmatrix}=\begin{bmatrix}
+0 & 0 \\
+BZA^{-1}
+\end{bmatrix}.$$
+
+\textbf{claim:}  The proof of the Tom Braden case which gives us the rank-stratification goes through entirely similarly to tell us that, $V_\lambda$ is stratified into orbits
+%
+$$C_0<C_1<C_2<... <C_k,$$
+%
+	where $C_i$ is the orbit of those block-scalar matrices of rank $ir$, and by adapting \href{https://math.stackexchange.com/questions/1488184/matrices-with-rank-exactly-r-as-variety}{this argument}, $\dim C_i=i(k+l-i)$. 
+	The stabilizer of any point $Z_i\in C_i$ will be isomorphic to 
+	
+	 The closure $\bar{C}_i$ will be smooth for $i=0, k$, and for each $i\neq 0, k$ it will be the union of all smaller orbits, which will be singular.
+	 
+		We may identify each
+		%
+		$$X=\begin{bmatrix}
+			0 & 0 \\
+			Z & 0
+		\end{bmatrix}\in V_\lambda,$$
+	%
+	with the matrix $\tilde{Z}\in M_{l,k}(\bc)$ whose $(i,j)^{\tx{th}}$ entry is the scalar of the $(i,j)^{\tx{th}}$ $r$-by-$r$ block of $Z$.  
+	Like-wise, we may identify $H_\lambda$ with $GL_l\times GL_k$.  
+	  
+	 Take as a representative of the orbit $C_i$, the matrix $Z_i$ which consists of the $i$-by-$i$ identity matrix in the upper left block, and 0's everywhere else.  
+	 While I have not yet done so here in full generality and formality, it appears that the stabilizer will always be connected.  
+	 However, an explicit description of this is somewhat complicated and tedious.  
+	 I am hoping that I might find a more elegant explanation than direct abstract computation.  
+	 
+	 Once the connectedness of stabilizers is established, we can conclude that the only irreducible equivariant local systems are the trivial ones.  
+	 Thus, as a short-hand we define $\mathbbm{1}_i:=\mathbbm{1}_{C_i}$. 
+	
+	\textbf{Claim:} According to \href{https://en.wikipedia.org/wiki/Determinantal_variety#:~:text=In%20algebraic%20geometry%2C%20determinantal%20varieties,product%20of%20two%20projective%20spaces.}{this Wikipedia entry} for \emph{Determinental varieties},\\
+	 %
+	 $$\tilde{C}_i=\lset(Z, V)\in M_{l,k}(\bc)\times G(i, l) |Z(\bc^k)\subseteq V\rset,$$
+	 %
+	  is a resolution of singularities for $\bar{C}_i$, via the projection map $\pi_i$ on the first factor, where $G(i, l)$ is the complex Grassmannian of $i$-planes in $l$-space.  
+	 However, by the symmetry of the situation, in order to ensure that our maps are semi-small, we will instead take
+	 %
+	 $$\tilde{C}_i=\lset(Z^t, V)\in M_{k,l}(\bc)\times G(i, k)| Z(\bc^l)\subseteq V\rset,$$
+	 %
+	 where $\pi_i$ is now the transpose of projection onto the first factor. 
+	
+	For $j\leq i$, let $Z_j\in C_j$, the fiber $\pi_i^{-1}\{Z_j\}$ must consist of all pairs $(Z_j)$ where $V\in G(i, k)$, and $V\supseteq Z_j(\bc^l)$.  
+	To re-phrase this, we could view it as making the choice of quotient $V/Z_j(\bc^l)$ withn $\bc^k/Z_j(\bc^l)$.  
+	Thus, the fiber $\pi_i^{-1}\{Z_j\}$ can be realized any any choice of a subspace of dimension
+	%
+	$$\dim \lb V/Z_j(\bc^l)\rb=\dim V-\dim Z_j(\bc^l)=i-j,$$
+	%
+	(recalling that $Z$ has rank $j$), from a total space of dimension
+	%
+	$$\dim\lb \bc^k/Z_j(\bc^l)\rb=\dim \bc^k-\dim Z_j(\bc^l)=k-j.$$
+	
+	In other words, we can make the identification $\pi_i^{-1}\{Z_j\}\cong G(i-j, k-j)$.  
+	
+	In order to prove that these covers are in fact semi-small we need to confirm that for all $C_j\subseteq \bar{C}_i$, that is, all $C_j$ for $j\leq i$, and $Z_j\in C_j$,
+	%
+	\begin{align*}
+		\dim C_j+2\dim\pi_i^{-1}\{Z_j\}&\leq \dim\tilde{C}_i\\
+		j(k+l-j)+2\dim G(i-j, k-j)&\leq i(k+l-i)\\
+		j(k+l-j)+2(i-j)(k-i)&\leq i(k+l-i).
+	\end{align*}
+
+	For $j=0$ this reduces to $k-i\leq l$ which is certainly true.  
+	Proceding by induction... For some reason I'm having the damnedess time trying to prove this, but having tested this inequality for many values of $0\leq j\leq i\leq k\leq l$ in Pyhton, I'm confident that this map is indeed semi-small, and more-over that the only relevant orbit of $\pi_i$ is $C_i$ itself.  
+	Thus, pending a more formal verification, for any choice of $(i,j)$ such that $0\leq j\leq i\leq k\leq l$, and $Z\in C_i$,
+	%
+	$$\pi_{i\ast}\mathbbm{1}_i[i(k+l-i)]=m IC(\mathbbm{1}_i).$$
+	
+	Given $Z\in C_j$, it's a general fact about $IC$'s that
+	%
+	$$IC(\mathbbm{1}_i)_Z=IC(\mathbbm{1}_i)|_{C_i}=\mathbbm{1}_i[i(k+l-i)].$$
+	
+	Meanwhile, the fiber $\pi_i^{-1}\{Z\}=G(k-i, k-i)\cong\{pt\}$, and as
+	%
+	$$H^i(\{pt\})=\begin{cases}
+		\mathbbm{1}_{\tilde{C}_i}, & i=0 \\
+		0, & \tx{else}
+	\end{cases},$$
+%
+	we conclude that 
+	%
+	\begin{align*}
+	mIC(\mathbbm{1}_i)_Z&=\lb \pi_{i\ast}\mathbbm{1}_{\tilde{C}_1}[i(k+l-i)]\rb_{Z_j}\\
+	IC(\mathbbm{1}_i)|_{C_i}&=H^\bullet\lb \{pt\}\rb[i(k+l-i)]\\
+	\mathbbm{1}_i[i(k+l-i)]&=\mathbbm{1}_i[i(k+l-i)],
+\end{align*}
+%
+	meaning $m=1$.  
+	
+	More generally, according to \emph{Lie Groups, Bump, pages 522}, the rank of the cohomology ring of $G(i-j, k-j)=G(k-i, k-j)$ is $\binom{k-j}{k-i}$, which is the "total" dimension of $IC(C_i, \mathbbm{1}_i)|_{C_j}$. 
+	For the purposes of the $p$-KLH, we we're interested is the total dimension $\dim IC(\mathbbm{1}_i)|_{C_j}$, and thus, for any $(i,j)$ such that $0\leq j\leq i \leq k\leq l$ and $Z_j\in C_i$, we see that 
+	%
+	\begin{align*}
+		\dim IC(\mathbbm{1}_i)_{Z_j}&=\dim \lb\pi_{i\ast}\mathbbm{1}_{\tilde{C}_i}[i(k+l-i)]\rb_{Z_j}\\
+		\dim IC(\mathbbm{1}_i)|_{C_j}&=\dim \lb H^\bullet(\pi_i^{-1}\{Z_j\})\rb\\
+		&=\dim H^\bullet(G(i-j, k-j))\\
+		&=\binom{k-j}{k-i}.
+	\end{align*}
+	
+	This completes the computation of the geometric multiplicity matrix in this case, that is, 
+	%
+	$$[m_{\tx{geo}}^\lambda]_{ij}=\dim IC(\mathbbm{1}_i)|_{C_j}=\binom{k-j}{k-i},$$
+	%
+	where we define $\binom{k-j}{k-i}=0$ for $k-i>k-j$.  
+	According to \emph{Example 11.3} of \cite{ZelI2}, the spectral multiplicity matrix is given by 
+	%
+	$$[m_{\tx{rep}}^\lambda]_{ij}=\binom{k-i}{k-j}=[m_{\tx{geo}}^\lambda]_{ji},$$
+	%
+	and thus ${}^tm_{\tx{rep}}^\lambda=m_{\tx{geo}}^\lambda$,verifying the $p$-KLH in this case. 
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	\chapter{The book of $GL(4)$}
+	
+	In this chapter, we give explicit descriptions of the multiplicity tables for $GL(4)$ on both the spectral and geometric sides. 
+	
+	
+	By Bernstein decomposition on the spectral side, or correspondingly the Vogan decomposition on the geometric side, we know that we need only consider the cases of cuspidal support belonging to a single ray.  
+	More-over, barring some proper references, we need only consider the multiplicites of "twists" by the determinant character $\nu$ the arise, and, with respect to the aims of the $p$-adic Kazhdan-Lusztig hypothesis, we also no do care which representations have particular multiplicites, only the multiplicities that appear. 
+	
+	We begin with the principal series representations, which is to say, twists of the identity representation 1, by $\nu$.  
+	We will describe the cuspidal support by the powers of $\nu$ that appear.  
+	For example, we will describe $\{1, \nu, \nu, \nu^2\}$ by the integer sequence $\{0, 1, 1, 2\}$.  
+	
+	First, consider the case where we only have a single representation, for which of course, there is a single possibility $\{0, 0, 0, 0\}$.  
+	
+	If we have two representations, then either one appears with multiplicity one, and the other with multiplicity three, or both occur with multiplicity two. 
+	That is $\{0, 0, 1\}$ or $\{0, 0, 1, 1\}$.  
+	
+	For the case of three representations, the only possibility is that one representation occurs with multiplicity two, and the others occur with multiplicity one, hence $\{0, 0, 1, 2\}$.  
+	
+	Finally, there is a unique support where each representation occurs with multiplicity one: $\{0, 1, 2, 3\}$.  
+	
+	In summary, the possible supports corresponding to principal series representations, up to multiplicities of representations, and arrangements of their positions, are
+	%
+	$$\{0, 0, 0, 0\}, \{0, 0, 0, 1\}, \{0, 0, 1, 1\}, \{0, 0, 1, 2\}, \{0, 1, 2, 3\}.$$ 
+	
+	Aside from considering a supercuspidal representation of $GL(4)$ itself
+	
+	\section{The determinental case}
+	
+	\subsection{The spectral side}
+	
+	Consider the following family of multi-segments with support $\{\vi, \vi, \nu\vi, \nu\vi\}$,
+	%
+	\begin{align*}
+		a_0&=\{[\vi], [\vi], [\nu\vi], [\nu\vi]\} \\
+		a_1&=\{[\vi, \nu\vi], [\vi], [\nu\vi]\} \\
+		a_2&=\{[\vi, \nu\vi], [\vi, \nu\vi]\}.
+	\end{align*}
+	
+	By \emph{Example 11.3} of \cite{ZelI2}, we know that $a_0>a_1>a_2$, and in the Grothendieck group $\mf{R}(G)$,
+	%
+	$$\pi(a_i)=\sum_{i\leq j\leq k}C_{k-j}^{k-i}\la a_j\ra.$$
+	
+	Therefore
+	%
+	\begin{align*}
+		\pi(a_0)&= \sum_{0\leq j \leq 2}C_{2-j}^2\la a_j\ra\\
+		&= C_2^2\la a_0\ra+C_1^2\la a_1\ra +C_0^2\la a_2\ra\\
+		&=\la a_0\ra+2\la a_1\ra+\la a_2\ra.\\
+		\pi(a_1)&=\sum_{1\leq j\leq 2}C_{k-j}^1\la a_j\ra\\
+		&=C_1^1\la a_1\ra +C_0^1\la a_2\ra\\
+		&=\la a_1\ra+\la a_2\ra.\\
+		\pi(a_2)&=\sum_{2\leq j\leq 2}C_{k-j}^0\la a_j\ra\\
+		&=C_0^0\la a_2\ra\\
+		&=\la a_2\ra. 
+	\end{align*}
+	
+	Therefore, the spectral multiplicity matrix can be seen to be 
+	%
+	\begin{center}
+		\begin{tabular}{ c | c c c }
+			$m_{\tx{rep}}$ & $\la a_0\ra$ & $\la a_1\ra$ & $\la a_2\ra$ \\
+			\hline 
+			$\pi(a_0)$ & 1 & 2 & 1 \\
+			$\pi(a_1)$ & 0 & 1 & 1 \\
+			$\pi(a_2)$ & 0 & 0 & 1
+		\end{tabular}
+	\end{center}
+	
+	\subsection{Determination of $V_\lambda, H_\lambda$, and the orbits}
+	
+	Note that this theory was completely worked out in greater generality in previous sections, but we take an overly explicit and naive approach here just to liven things up a little, and gain some broader perspective. 
+	
+	Let $\psi:W_F\to GL_4(\bc)$ be the infinitesimal parameter of $\vi$. 
+	Therefore, the infinitesimal parameter of the irreducible and standard representations appearing in the previous section is 
+	%
+	$$\lambda(w)=\begin{bmatrix}
+		\psi(w) & 0 & 0 & 0 \\
+		0 & \psi(w) & 0 & 0 \\
+		0 & 0 & \nu\psi(w) & 0 \\
+		0 & 0 & 0 & \nu\psi(w)
+	\end{bmatrix}.$$
+	
+	Writing $U\in V_\lambda$ in 2 by 2 blocks,
+	%
+	$$U=\begin{bmatrix}
+		X & Y \\
+		Z & W
+	\end{bmatrix},$$
+	%
+	we can expand the defining condition on $V_\lambda$ as being, for all $w\in W_F$,
+	%
+	\begin{align*}
+		\lambda(w)X\lambda(w)^{-1}&=\nu(w)X\\
+		\begin{bmatrix}
+			\psi(w)I_2 & 0 \\
+			0 & \nu\psi(w)I_2
+		\end{bmatrix}\begin{bmatrix}
+			X & Y \\
+			Z & W
+		\end{bmatrix}\begin{bmatrix}
+			\psi(w)^{-1}I_2 & \\
+			0 & \nu\psi(w)^{-1}I_2
+		\end{bmatrix}&=\begin{bmatrix}
+			\nu(w)X & \nu(w)Y\\
+			\nu(w)Z & \nu(w)W
+		\end{bmatrix}\\
+		\begin{bmatrix}
+			X & \nu^{-1}(w)Y \\
+			\nu(w)Z & W
+		\end{bmatrix}&=\begin{bmatrix}
+			\nu(w)X & \nu(w)Y\\
+			\nu(w)Z & \nu(w)W
+		\end{bmatrix}.
+	\end{align*}
+	
+	As this must hold for all $w\in W_F$, this is only possible if $X=Y=W=0$.  
+	Meanwhile, any choice for $Z\in M_{22}(\bc)$ is valid, hence
+	%
+	$$V_\lambda=\lset\begin{bmatrix}
+		0 & 0 \\
+		Z & 0 
+	\end{bmatrix} : Z\in M_{22}(\bc)\rset.$$ 
+	
+	By an entirely similar argument 
+	%
+	$$H_\lambda=\lset\begin{bmatrix}
+		A & 0 \\
+		0 & B
+	\end{bmatrix}\in GL_4(\bc)\rset.$$
+	
+	Now
+	%
+	$$\begin{bmatrix}
+		A & 0 \\
+		0 & B
+	\end{bmatrix}\cdot\begin{bmatrix}
+		0 & 0 \\
+		X & 0 
+	\end{bmatrix}=\begin{bmatrix}
+		A & 0 \\
+		0 & B
+	\end{bmatrix}\begin{bmatrix}
+		0 & 0 \\
+		Z & 0 
+	\end{bmatrix}\begin{bmatrix}
+		A^{-1} & 0 \\
+		0 & B^{-1}
+	\end{bmatrix}=\begin{bmatrix}
+		0 & 0 \\
+		BXA^{-1} & 0
+	\end{bmatrix}.$$
+	
+	Thus, it follows that the orbits of $V_\lambda$ are determined entirely by the rank of $Z$.  
+	We index them by their corresponding rank $C_0, C_1, C_2$, where 
+	%
+	$$\dim C_0=0, \ \ \ \ \ \ \dim C_1=3, \ \ \ \ \ \ \dim C_2=4.$$
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	\subsection{Determination of the stabilizers/equivariant fundamental groups}
+	
+	First we note that the stabilizer of the zero matrix, being the only element of $C_0$ is all of $H_\lambda$, and since
+	%
+	$$H_\lambda\cong GL_2(\bc)\times GL_2(\bc),$$
+	%
+	is is connected, hence $\pi_{H_\lambda}^{\tx{\'et}}(C_0, 0)=0$.  
+	
+	For 
+	%
+	$$\begin{bmatrix}
+		A & 0 \\
+		0 & B
+	\end{bmatrix}\in H_\lambda,$$
+	%
+	write
+	$$B=\begin{bmatrix}
+		a & b \\
+		c & d
+	\end{bmatrix}, \ \ \ \ \ A^{-1}=\begin{bmatrix}
+		\alpha & \beta \\
+		\gamma & \delta
+	\end{bmatrix},$$
+	%
+	we attempt to compute the stabilizer of a point in the rank one orbit $C_1$, by demanding
+	%
+	$$\begin{bmatrix}
+		1 & 0 \\
+		0 & 0  
+	\end{bmatrix}=\begin{bmatrix}
+		a & b \\
+		c & d
+	\end{bmatrix}\begin{bmatrix}
+		1 & 0 \\
+		0 & 0 
+	\end{bmatrix}\begin{bmatrix}
+		\alpha & \beta \\
+		\gamma & \delta
+	\end{bmatrix}=\begin{bmatrix}
+		a\alpha & a\beta \\
+		c\alpha & c\beta
+	\end{bmatrix}.$$
+	
+	Equating both sides, we determine that $\alpha=a^{-1}$, hence neither are zero, and this forces\\
+	$\beta=c=0$.  
+	Therefore, by taking the inverse and making appropriate substitutions, we find that 
+	%
+	$$A=\frac{1}{\alpha\delta-\beta\gamma}\begin{bmatrix}
+		\delta & -\beta\\
+		-\gamma & \delta
+	\end{bmatrix}=\frac{a}{\delta}\begin{bmatrix}
+		\delta & 0 \\
+		-\gamma & a^{-1}
+	\end{bmatrix}.$$
+	
+	Therefore, the stabilizer is given by
+	%
+	$$\begin{bmatrix}
+		a & 0 & 0 & 0 \\
+		-\gamma/\delta & 1/\delta & 0 & 0 \\
+		0 & 0 & a & b \\
+		0 & 0 & 0 & d
+	\end{bmatrix},$$
+	%
+	with the only restrictions being $a, \delta, d\neq 0$.  
+	Hence the variety is isomorphic to 
+	%
+	$$\bc^\times\times\bc^\times\times\bc^\times\times\bc\times\bc,$$
+	%
+	which is connected.  
+	That is, for any $Z\in C_1$ we find $\pi_{H_\lambda}^{\tx{\'et}}(C_1, X)=0$.  
+	
+	Choosing the identity matrix $I$ for the representative of $C_2$, we find that the stabilizer must satisfy $BA^{-1}=I\Rightarrow A=B$.  
+	Therefore the stabilizer is just $GL_2(\bc)$ as a variety, which is connected, and thus $\pi_{H_\lambda}^{\tx{\'et}}(C_2, I)=0$.  
+	
+	Thus we have see that each of the equivariant fundamental groups will be trivial, and therefore the only sheaves to account for are those that arise from trivial the local system on each orbit.  
+	
+	
+	Note that $\bar{C}_0=0$ and $\bar{C}_2\cong V_\lambda\cong \ba_\bc^4$ are both smooth.  
+	Thus, by the result that 
+	%
+	\begin{enumerate}
+		\item $IC(\mc{L}_C)|_C=\mc{L}(C)[\dim C]$,
+		\item If $\bar{C}$ is smooth, then $IC(\mathbbm{1}_C)|_{C'}=\begin{cases}
+			\mathbbm{1}_{C'}[\dim C], & C'\subseteq \bar{C}\\
+			0, & \tx{otherwise}
+		\end{cases}$
+		\item $IC(\mc{L}_C)|_{C'}=0$ if $C'\not\subseteq \bar{C}$,
+	\end{enumerate}  
+	%
+	we can begin to fill out the geometric multiplicity matrix as 
+	%
+	\begin{center}
+		\begin{tabular}{c | c c c}
+			$m_{\tx{geo}}$ & $P|_{C_0}$ & $P|_{C_1}$ & $P|_{C_2}$ \\
+			\hline
+			$IC(\mathbbm{1}_{C_0})$ & $\mathbbm{1}_{C_0}[0]$ & 0 & 0 \\
+			$IC(\mathbbm{1}_{C_1})$ & ? & $\mathbbm{1}_{C_1}[3]$ & 0 \\
+			$IC(\mathbbm{1}_{C_2})$ & $\mathbbm{1}_{C_0}[4]$ & $\mathbbm{1}_{C_1}[4]$ & $\mathbbm{1}_{C_2}[4]$
+		\end{tabular}
+	\end{center}
+	
+	As we'll see below, $\bar{C}_1$ is singular, and thus we'll need to find a resolution.  
+	We know from the KS paper, for example, that the closure of the orbit of rank 1 matrices is the collection of matrices with rank \emph{at most} 1.  
+	Thus, since we're identifying the total space with $M_{22}(\bc)$, we can make the realization
+	%
+	$$\bar{C}_1\cong\{(a, b, c, d,)\in \ba_\bc^4 | ad-bc=0\}.$$
+	
+	Differentiating the equation at the four variables, we find that we have precisely one singular point $(a, b, c, d)=(0, 0, 0, 0)$. 
+	Taking another perspective $\bar{C}_1=\{X\in GL(2) | \det X=0\}$, and 
+	%
+	$$\tilde{C}_1:=\{(Z, v)\in \bar{C}_1\times \mathbb{P}^1 | Zv=0\},$$
+	%
+	gives us a smooth resolution by projection on the first factor $f:\tilde{C}_1\to\bar{C}_1$.  
+	I will not prove this here, but am taking it on faith that this is true given other calculations that I have seen.  
+	So, it is possible this a place where I am going wrong. 
+	
+	Recall that in order for $f$ to be semi-small, for every orbit $C\subseteq\bar{C}_1$, and every $Z\in C$ we have
+	%
+	$$\dim C+2\dim f^{-1}\{Z\}\leq\dim \tilde{C}_1.$$
+	
+	Those orbits for which we have equality are said to be \emph{relevant}.  
+	The orbits contained in $\bar{C}_1$ are exactly $C_0$ and $C_1$.  
+	
+	Since, for the zero-matrix $0v=0$ for all $v\in \mathbb{P}^1$, we see that the fiber 
+	%
+	$$f^{-1}\{0\}=\{(0, v)\in \bar{C}_1\times\mathbb{P}^1 | Xv=0\}\cong \mathbb{p}^1.$$
+	
+	Therefore,
+	%
+	$$\dim C_0+2\dim f^{-1}\{0\}=0 + 2(1)=2< 3 \dim \tilde{C}_1.$$
+	
+	Hence, $C_0$ does fulfill the requirement upon it for $f$ to be semi-small, but it is \emph{not} relevant.  
+	
+	As a representative of $Z\in C_1$, consider
+	%
+	$$Z_0=\begin{bmatrix}
+		1 & 0 \\
+		0 & 0
+	\end{bmatrix}.$$
+	
+	The fiber is given by 
+	%
+	$$f^{-1}\{Z_0\}=\{(Z_0, v)\in \bar{C}_1\times\mathbb{P}^1 | Z_0v=0\}.$$
+	
+	Writing $v\in \mathbb{P}^1$ as 
+	%
+	$$v=\begin{bmatrix}
+		a\\
+		b
+	\end{bmatrix},$$
+	%
+	we can compute 
+	%
+	$$\begin{bmatrix}
+		0 \\
+		0 
+	\end{bmatrix}=\begin{bmatrix}
+		1 & 0 \\
+		0 & 0 
+	\end{bmatrix}\begin{bmatrix}
+		a \\
+		b
+	\end{bmatrix}=\begin{bmatrix}
+		b\\
+		0
+	\end{bmatrix}\sim\begin{bmatrix}
+		1 \\
+		0
+	\end{bmatrix}.$$
+	
+	Assuming this behavior is generic, the fiber above any point of $C_1$ is a single point. 
+	Thus, for any $Z\in C_1$ we compute 
+	%
+	$$\dim C_1+2\dim f^{-1}\{Z\}=3+2(0)=3\leq 3=\dim \tilde{C}_1.$$
+	
+	Therefore, any point $Z\in C_1$ will satisfy the semi-small condition, hence we conclude that $f$ itself is semi-small, and $C_1$ is the only relevant orbit. 
+	
+	By the \emph{Decomposition Theorem}
+	%
+	\begin{align*}
+		f_\ast\mathbbm{1}_{\tilde{C}_1}[\dim\tilde{C}_1]&=m IC(\mathbbm{1}_{C_1})\\
+		f_\ast\mathbbm{1}_{\tilde{C}_1}[3]&=m IC(\mathbbm{1}_{C_1}). 
+	\end{align*}
+	
+	Let $Z\in C_1$.  
+	We know in general that for $Z_1\in C_1$
+	%
+	$$IC(\mathbbm{1}_{C_1})_{Z_1}\cong IC(\mathbbm{1}_{C_1})|_{C_1}=\mathbbm{1}_{C_1}[3].$$
+	
+	More-over,
+	%
+	$$f_\ast\mathbbm{1}_{\tilde{C}_1}[3]=H^\bullet\lb f^{-1}\{Z\}\rb[3]=H^\bullet(pt)[3].$$
+	
+	Since 
+	%
+	$$H^i(pt)=\begin{cases}
+		\mathbbm{1}_{\tilde{C}_1}, & i=0\\
+		0, & \tx{else}
+	\end{cases}$$
+	%
+	we see that
+	%
+	\begin{align*}
+		\lb f_\ast\mathbbm{1}_{\tilde{C}_1}[3]\rb_Z&=mIC(\mathbbm{1}_{C_1})_Z\\
+		\mathbbm{1}_{C_1}[3]&=m\mathbbm{1}_{C_1}[3].
+	\end{align*}
+	
+	Therefore $m=1$.  
+	
+	Taking the stalk at the zero matrix,
+	%
+	$$IC(\mathbbm{1}_{C_1})|_{C_0}\cong IC(\mathbbm{1}_{C_1})_0=\lb f_\ast\mathbbm{1}_{\tilde{C}_1}[3] \rb_0=H^\bullet(f^{-1}\{0\})[3],$$
+	%
+	where 
+	%
+	$$H^i(f^{-1}\{0\})=H^i(\mathbb{P}^1)=\begin{cases}
+		\mathbbm{1}_{\tilde{C}_1}, & i=0,2\\
+		0, & \tx{otherwise}
+	\end{cases}$$
+	
+	For some reason I don't understand, when we take cohomology, we shift to the negative degree, therefore the above reduces to 
+	%
+	\begin{align*}
+		IC(\mathbbm{1}_{C_1})_0&=\lb f_\ast\mathbbm{1}_{\tilde{C}_1}[3]\rb_0\\
+		&=\lb\mathbbm{1}_{\tilde{C}_1}[0]\oplus\mathbbm{1}_{\tilde{C}_1}[-2]\rb_0[3]\\
+		&=\mathbbm{1}_{C_0}[3]\oplus\mathbbm{1}_{C_0}[1].
+	\end{align*}
+	
+	Hence, we may complete the table as
+	%
+	\begin{center}
+		\begin{tabular}{c | c c c}
+			$m_{\tx{geo}}^\lambda$ & $P|_{C_0}$ & $P|_{C_1}$ & $P|_{C_2}$ \\
+			\hline
+			$IC(\mathbbm{1}_{C_0})$ & $\mathbbm{1}_{C_0}[0]$ & 0 & 0 \\
+			$IC(\mathbbm{1}_{C_1})$ & $\mathbbm{1}_{C_0}[1]\oplus\mathbbm{1}_{C_0}[3]$ & $\mathbbm{1}_{C_1}[3]$ & 0 \\
+			$IC(\mathbbm{1}_{C_2})$ & $\mathbbm{1}_{C_0}[4]$ & $\mathbbm{1}_{C_1}[4]$ & $\mathbbm{1}_{C_2}[4]$
+		\end{tabular}
+	\end{center}
+	
+	Thus, counting the (total) dimensions of the stalks, we compare the multiplicity matrices side-by-side
+	%
+	\begin{center}
+		\begin{tabular}{c | c c c}
+			$m_{\tx{geo}}^\lambda$ & $P|_{C_0}$ & $P|_{C_1}$ & $P|_{C_2}$ \\
+			\hline
+			$IC(\mathbbm{1}_{C_0})$ & 1 & 0 & 0 \\
+			$IC(\mathbbm{1}_{C_1})$ & 2 & 1 & 0 \\
+			$IC(\mathbbm{1}_{C_2})$ & 1 & 1 & 1
+		\end{tabular} \ \ \ \ \ \ \ \ \begin{tabular}{ c | c c c }
+			$m_{\tx{rep}}$ & $\la a_0\ra$ & $\la a_1\ra$ & $\la a_2\ra$ \\
+			\hline 
+			$\pi(a_0)$ & 1 & 2 & 1 \\
+			$\pi(a_1)$ & 0 & 1 & 1 \\
+			$\pi(a_2)$ & 0 & 0 & 1
+		\end{tabular}
+	\end{center}
+	which is is consistent with what we expect by our computations on the spectral side and the Kazhdan-Lusztig hypothesis.  
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	\section{An "unresolved" case: Zelevinsky's 11.4}
+	
+	\subsection{The spectral side}
+	
+	From \cite{ZelI2}, we consider \emph{Example 11.4}.  
+	Specializing to the case of $\rho=\mathbbm{1}$, the trivial representation, we may write the support as 
+	%
+	$$S=\{0, 1, 1, 2\},$$
+	%
+	with multi-segments,
+	%
+	$$a_{\tx{max}}=\{0, 0, 1, 2\}, a_l=\{[0, 1], 1, 2\}, a_r=\{0, 1, [1, 2]\}, a_0=\{[0, 2], 1\}, a_{\tx{min}}=\{[0, 1], [1, 2]\}.$$
+	
+	The corresponding lattice structure is given by 
+	%
+	$$\begin{tikzcd}
+		& {a_{\text{max}}} \\
+		{a_l} && {a_r} \\
+		& {a_0} \\
+		& {a_{\text{min}}}
+		\arrow[no head, from=2-1, to=1-2]
+		\arrow[no head, from=1-2, to=2-3]
+		\arrow[no head, from=2-1, to=3-2]
+		\arrow[no head, from=2-3, to=3-2]
+		\arrow[no head, from=3-2, to=4-2]
+	\end{tikzcd}$$
+	
+	Then, as demonstrated in \cite{ZelI2}, the spectral multiplicity matrix is given by
+	%
+	\begin{center}
+		\begin{tabular}{ c c c c c c}
+			$m_{\tx{geo}}$ & $\la a_{\tx{max}}\ra$ & $\la a_l\ra$ & $\la a_r\ra$ & $\la a_0\ra$ & $\pi(a_{\tx{min}})$ \\
+			\hline 
+			$\pi(a_{\tx{max}})$ & 1 & 1 & 1 & 2 & 1\\
+			$\pi(a_l)$ & 0 & 1 & 0 & 1 & 1 \\
+			$\pi(a_r)$ & 0 & 0 & 1 & 1 & 1 \\
+			$\pi(a_0)$ & 0 & 0 & 0 & 1 & 1 \\
+			$\pi(a_{\tx{min}})$ & 0 & 0 &  0& 0 & 1 \\
+		\end{tabular}
+	\end{center}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	\subsection{The Geometry} 
+	
+	The Vogan variety corresponding to the support $S=\{1, \nu, \nu, \nu^2\}$ can be seen to be of the form
+	%
+	$$\begin{bmatrix}
+		0 & 0 & 0 & 0 \\
+		\ast & 0 & 0 & 0 \\
+		\ast & 0 & 0 & 0 \\
+		0 & \ast & \ast & 0
+	\end{bmatrix}$$
+	
+	Letting $X$ be the column matrix on the left, and $Y$ the row matrix on the bottom, we write the orbits as 
+	%
+	$$C_{ijk}=\{(X, Y)\in M_{2,1}(\bc)\times M_{1,2}(\bc) | \tx{rk}(X)=i, \tx{rk}(Y)=j, \tx{rk}(YX)=k\}.$$
+	
+	The full list of orbits is
+	%
+	$$C_{000}, C_{010}, C_{100}, C_{110}, C_{111}.$$
+	
+	It would appear from the KS paper that the closure of any of these orbits, simply has the effect of replacing the "=" sign in their definitions with "$\leq$".  
+	Thus the corresponding lattice structure is given by 
+	%
+	$$\begin{tikzcd}
+		& {C_{111}} \\
+		& {C_{110}} \\
+		{C_{100}} && {C_{010}} \\
+		& {C_{000}}
+		\arrow[no head, from=1-2, to=2-2]
+		\arrow[no head, from=2-2, to=3-1]
+		\arrow[no head, from=3-1, to=4-2]
+		\arrow[no head, from=4-2, to=3-3]
+		\arrow[no head, from=3-3, to=2-2]
+	\end{tikzcd}$$
+%
+	which is exactly what we expect from the spectral side. 
+	From our expectations of the Kazhdan-Lusztig hypothesis, I then suppose it will be the case that
+	%
+	$$\dim IC(C_{110}, \mathbbm{1}_{110})|_{C_{000}}=2.$$
+	
+	Given the expectations that all irreducible local systems are trivial, we might write this more simply as
+	%
+	$$\dim IC_{110}|_{000}=2.$$
+	
+	The dimensions of the orbits are given by
+	%
+	$$\dim C_{111}=4??? \ \ \ \ \ \dim C_{110}=3, \ \ \ \ \  \dim C_{100}=2, \ \ \ \ \ \dim C_{010}=2,  \ \ \ \ \ \dim C_{000}=0.$$
+	
+	Using my speculation based on the work of \cite{Chr}, we can base change the moment map $\mu:\tilde{\mf{g}}\to\mf{g}$ to $\bar{C}_{110}$ to get
+	%
+	$$\tilde{C}_{110}=\{(x, p)\in \bar{C}_{110}\times G/P_\lambda | x\in p\}.$$
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+
+	
+	\section{An explicit description of a supercuspidal representation of $GL(2)$}
+	
+	In this section we will construct an explicit supercuspidal representation $\rho$ of $GL(4)$, and determine its Langlands parameter $\phi:=\phi_\rho$, its infinitesimal parameter $\lambda:=\lambda_\phi$, the Vogan variety $V_\lambda$, and the other (equivalence classes of) Langlands parameters associated to $\lambda$.  
+	
+	We fix now a $p$-adic field, and an extension $E/F$ such that $\tx{Gal}(E/F)\cong S_3$.  
+	The "standard" irreducible representation $S_3\to GL_2(\bc)$ is given by 
+	%
+	\begin{align*}
+		e&\mapsto \begin{bmatrix}
+			1 & 0\\
+			0 & 1
+		\end{bmatrix}, \ \ \ \ \ \ \ \ \ \ \\
+	(12)&\mapsto\begin{bmatrix}
+		-1 & -1 \\
+		0 & 1
+	\end{bmatrix} \ \ \ \ \ \ \ \ \ \ (123)\mapsto\begin{bmatrix}
+	-1 & -1 \\
+	1 & 0 
+\end{bmatrix}\\
+	(23)&\mapsto\begin{bmatrix}
+		1 & 0 \\
+		-1 & -1 
+		\end{bmatrix} \ \ \ \ \ \ \ \ \ \ (132)\mapsto\begin{bmatrix}
+		0 & 1 \\
+		-1 & -1
+	\end{bmatrix}
+	\end{align*} 
+	
+
+	
+		$$\begin{tikzcd}
+		{W_F} && {GL_2(\mathbb{C})} \\
+		& {W_E/W_F\cong\text{Gal}(E/F)}
+		\arrow[from=1-1, to=1-3]
+		\arrow[from=1-1, to=2-2]
+		\arrow[from=2-2, to=1-3]
+	\end{tikzcd}$$
+	
+	
+		***** for complex numbers $z=re^{i\theta}$ the $r$ is the hyperbolic and the $e^{i\theta}$ is elliptic.  
+	In fact, Clifton actually thinks about writing things in terms of powers of $q$.  ***
+	
+	Anyways, send
+	%
+	$$\sigma\mapsto\begin{bmatrix}
+		0 & 1 \\
+		-1 & 0 
+	\end{bmatrix}, \ \ \ \ \ \ \tau\mapsto\begin{bmatrix}
+	1 & 0 \\
+	0 & -1
+\end{bmatrix}.$$
+
+	Then 
+	%
+	\begin{align*}
+		\phi_\rho(frob)&=\phi(\tau^{-1})\\
+		&=\begin{bmatrix}
+			1 & 0 \\
+			0 & -1
+		\end{bmatrix}_{\tx{elliptic}}. 
+	\end{align*}
+
+	For our supercuspidal $\rho$, we set $\mf{m}_0\{[\rho], [\nu\rho]\}$ and $\mf{m}_1=\{[\rho, \nu\rho]\}$, then we get 
+	%
+	$$0\to\pi_1\to M_0\tx{Ind}(\rho\ten\nu\rho)\to\pi_0\to 0.$$
+	
+	Meanwhile $\pi_1\cong M_1=\tx{Ind}(\la[\rho, \nu\rho]\ra)$.  
+	
+	Now we want to figure out $\lambda$, but first lets do the 
+	we have not yet wroked it out buuuuuut
+	
+	\subsection{Truths to  be worked out}
+	
+	For $\mf{m}_1$, 
+	
+	$$\lambda(w)=\phi_{\pi_0}(w, x)=\phi_\rho(w, x)\oplus |w|\phi_\rho(w, x)$$
+	%
+	and 
+	%
+	$$\phi_\rho=\tx{Ind}_{W_E}^{W_F}(\phi_\psi),$$
+	%
+	and for $\mf{m}_1=\{[\rho, \nu\rho]\}$
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	\chapter{The groups $SO(n)$}
+	
+	In this section, we carry out analysis of the group $SO_n(\bc)$, as for a $p$-adic field $F$, we have ${}^\vee \tx{Sp}_n\cong SO_{2n+1}(\bc)$ and ${}^\vee \tx{SO}_{2n}(F)\cong SO_{2n}(\bc)$.  
+	
+	To simplify the exposition, we will define the group $SO_n(\bc)$ with respect to the form $J={}^tI_n$.  
+	We consider an infinitesimal parameter $\lambda:W_F\to{}^\vee G$ in any case such that ${}^\vee G\cong SO_n(\bc)$, where
+	%
+	$$\lambda=1\oplus \nu \oplus... \oplus \nu^{n-1},$$
+	%
+	where as usual, we write $\nu$ both for the determinant character of the group, as well as its image under the (local) Langlands correspondence. 
+	
+	Thus, realizing $\lambda$ as a diagonal matrix, the same analysis may be carried out as in the case of multiplicity free support for $GL(n)$.  
+	However, we must now impose the further condition that for all such matrices $X$, we have
+	%
+	$${}^tXJ+JX=0,$$
+	%
+	as $V_\lambda\subseteq\mf{so}_n(\bc)$.  
+	Thus, we impose the condition that 
+	%
+	\begin{align*}
+		0&={}^tXJ+JX\\
+		&=\begin{bmatrix}
+			0 & 0 & ... & 0 & 0 \\
+			x_{21} & 0 & ... & 0 & 0 \\
+			0 & x_{32} & ... & 0 & 0 \\
+			... & & ... & & ...\\\
+			0 & 0 & ... & x_{n, n-1} & 0
+		\end{bmatrix}\begin{bmatrix}
+		0 & 0 & ... & 0 & 1 \\
+		0 & 0 & ... & 1 & 0 \\
+		0 & 0 & ... & 0 & 0 \\
+		... & & ... & & ...\\\
+		1 & 0 & ... & 0 & 0
+	\end{bmatrix}+\begin{bmatrix}
+	0 & 0 & ... & 0 & 1 \\
+	0 & 0 & ... & 1 & 0 \\
+	0 & 0 & ... & 0 & 0 \\
+	... & & ... & & ...\\
+	1 & 0 & ... & 0 & 0
+\end{bmatrix}\begin{bmatrix}
+0 & 0 & ... & 0 & 0 \\
+x_{21} & 0 & ... & 0 & 0 \\
+0 & x_{32} & ... & 0 & 0 \\
+... & & ... & & ...\\\
+0 & 0 & ... & x_{n, n-1} & 0
+\end{bmatrix}\\
+&=\begin{bmatrix}
+	0 & 0 & ... & 0 & 0 \\
+	0 & 0 & ... & 0 & x_{21} \\
+	0 & 0 & ... & x_{32} & 0 \\
+	... & & ... & & ...\\\
+	0 & x_{n, n-1} & ... & 0 & 0
+\end{bmatrix}+\begin{bmatrix}
+0 & 0 & ... & 0 & 0 \\
+0 & 0 & ... & 0 & x_{n, n-1} \\
+0 & 0 & ... & x_{n-1, n-2} & 0 \\
+... & & ... & & ...\\\
+0 & x_{2, 1} & ... & 0 & 0
+\end{bmatrix}\\
+&=\begin{bmatrix}
+	0 & 0 & ... & 0 & 0 \\
+	0 & 0 & ... & 0 & x_{21}+x_{n, n-1} \\
+	0 & 0 & ... & x_{32}+x_{n-1, n-2} & 0 \\
+	... & & ... & & ...\\\
+	0 & x_{n, n-1}+x_{21} & ... & 0 & 0
+\end{bmatrix}.
+	\end{align*}
+	
+	Therefore, we find that for all integers $i$ such that $1\leq i\leq n/2$, we find that $x_{i+1, i}=x_{n-(i-1), n-(i-1)-1}$.  
+	In particular, if $n$ is even, this tells us that this forces $x_{n/2+1, n/2}=0$.  
+	An entirely similar computation tells us that for $h=\tx{diag}(t_1, ..., t_n)\in H_\lambda$, when $n=2m$ we have $h=\tx{diag}(t_1, t_2, ..., t_m, t_m^{-1}, ..., t_1^{-1})$ and when $n=2m+1$ we have $h=\tx{diag}(t_1, ..., t_m, 1, t_m^{-1}, ..., t_1^{-1})$.  
+	
+	... The moral of the story is that the theory is basically the same here, the stabilizers will be trivial, and the multiplicity table will be immediate. 
+	
+	
+		\begin{thebibliography}{2}
+		
+		\bibitem{ABV} J. Adams, D. Barbasch and D. A. Vogan, Jr. – The Langlands classification
+		and irreducible characters for real reductive groups, Progress in Mathematics, vol. 104,
+		Birkhauser Boston, Inc., Boston, MA, 1992.
+		
+		\bibitem{Ach} P. Achar, Perverse Sheaves
+		
+		\bibitem{Bor} A. Borel – Automorphic L-functions, in Automorphic forms, representations and
+		L-functions, Part
+		2, p. 27-61Proc. Sympos. Pure Math., XXXIII, Amer. Math. Soc., Providence, R.I., 1979. 
+		
+		\bibitem{Chr} N. Chris, V. Ginzburg
+		-
+		Representation theory and complex geometry, Modern Birkhauser classics, Birkhauser Boston, 2010.
+		
+		\bibitem{Cun} C. Cunningham, A. Fiori, A. Moussaoui, J. Mracek,  B. Xu - Arthur packets for $p$-adic groups by way of microlocal vanishing cycles of perverse sheaves, with examples. Memoirs of the American Mathematical Society, Volume 276, Number 1353, 2022.
+		
+		\bibitem{Hum} J. E. Humphreys, Linear algebraic groups, Spring Verlga New York 1975.
+		
+		\bibitem{Kon} T. Konno, - A note on Langlands’ classification and irreducibility of induced representations of $p$-adic groups. Kyushu Journal of Mathematics 57(2), January 2003. 
+		
+		\bibitem{Vog} D. Vogan - The local Langlands conjecture, Representation theory of groups and algebras (J. Adams et al., eds. Contemporary Mathematics 145. American Mathematical Society, 1993.
+		
+		\bibitem{Zel} A. Zelevinsky - $p$-adic analogue of the Kazhdan-Lusztig conjecture, Funktsional Anal, i Prilozhen.
+		15, 1981.
+		
+		\bibitem{ZelI2} A. Zelevinsky - Induced representations of $p$-adic groups II.  
+	\end{thebibliography}
+	
+\end{document}

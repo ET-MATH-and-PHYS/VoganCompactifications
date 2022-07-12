@@ -19,7 +19,13 @@
 \contentsline {section}{\numberline {3.2}An "unresolved" case: Zelevinsky's 11.4}{25}{section.3.2}%
 \contentsline {subsection}{The spectral side}{25}{section.3.2}%
 \contentsline {subsection}{The Geometry}{26}{section.3.2}%
-\contentsline {section}{\numberline {3.3}An explicit description of a supercuspidal representation of $GL(2)$}{27}{section.3.3}%
-\contentsline {subsection}{Truths to be worked out}{27}{section.3.3}%
-\contentsline {chapter}{\chapternumberline {4}The groups $SO(n)$}{29}{chapter.4}%
-\contentsline {chapter}{Bibliography}{31}{chapter*.2}%
+\contentsline {section}{\numberline {3.3}An explicit description of a supercuspidal representation of $GL(2)$}{28}{section.3.3}%
+\contentsline {subsection}{Truths to be worked out}{28}{section.3.3}%
+\contentsline {chapter}{\chapternumberline {4}The groups $SO(n)$}{31}{chapter.4}%
+\contentsline {chapter}{\chapternumberline {5}The Kazhdan-Lusztig hypothesis for affine Hecke algebras}{33}{chapter.5}%
+\contentsline {section}{\numberline {5.1}Chapter 8 of C+G}{33}{section.5.1}%
+\contentsline {subsection}{Intros}{33}{section.5.1}%
+\contentsline {subsection}{The contravariant form}{34}{theorem.5.1.1}%
+\contentsline {section}{\numberline {5.2}The final pieces}{35}{section.5.2}%
+\contentsline {section}{\numberline {5.3}Speculation towards the full proof}{35}{section.5.3}%
+\contentsline {chapter}{Bibliography}{37}{chapter*.2}%

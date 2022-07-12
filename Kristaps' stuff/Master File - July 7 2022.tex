@@ -1463,21 +1463,68 @@ $$C_0<C_1<C_2<... <C_k,$$
 	%
 	$$\dim C_{111}=4??? \ \ \ \ \ \dim C_{110}=3, \ \ \ \ \  \dim C_{100}=2, \ \ \ \ \ \dim C_{010}=2,  \ \ \ \ \ \dim C_{000}=0.$$
 	
-	Using my speculation based on the work of \cite{Chr}, we can base change the moment map $\mu:\tilde{\mf{g}}\to\mf{g}$ to $\bar{C}_{110}$ to get
+	\textbf{Side note:} I still wonder, based off the work of \cite{Chr}, if we can base change the moment map $\mu:\tilde{\mf{g}}\to\mf{g}$ to $\bar{C}_{110}$ to get
 	%
 	$$\tilde{C}_{110}=\{(x, p)\in \bar{C}_{110}\times G/P_\lambda | x\in p\}.$$
 	
+	Since arbitrary flag varieties can be singular, we may then have to apply the Bott-Smaleson resolution to $G/P_\lambda$, and copose with the moment map $\mu$ to get a resolution of singularities that we can use.  
+	Note that by the claims of \emph{Elijah}, the parabolic $P_\lambda$ we see, is "the same" parabolic arising in Zelevinsky's short paper in which he embeds the closures of orbits into Schubert varieties.  
 	
+	Again, without even resolving singularities, we may begin to fill out the multiplicity table.  
+	Recall that we have our 3 basic tools,
+	%
+	\begin{enumerate}
+		\item $IC(\mc{L}_C)|_C=\mc{L}(C)[\dim C]$, 
+		\item If $\bar{C}$ is smooth, then $IC(\mathbbm{1}_C)|_{C'}=\begin{cases}
+			\mathbbm{1}_{C'}[\dim C], & C'\subseteq\bar{C}\\
+			0, & \tx{else}
+		\end{cases}$
+	\item $IC(\mc{L}_C)|_{C'}$ if $C'\subsetneq\bar{C}$.  
+	\end{enumerate}
 	
+	Therefore, properties 1. and 3. immediatly give us the diagonal and upper diagonal respectively, where for now I will write $IC_{ijk}:=IC(C_{ijk}, \mathbbm{1}_{C_{ijk}})$.  
+	%
+		\begin{center}
+		\begin{tabular}{ c c c c c c}
+			$m_{\tx{geo}}^\lambda$ & $|_{C_{000}}$ & $|_{C_{010}}$ & $|_{C_{100}}$ & $|_{C_{110}}$ & $|_{C_{111}}$ \\
+			\hline 
+			$IC_{000}$ & $\mathbbm{1}_{000}[0]$ & 0 & 0 & 0 & 0\\
+			$IC_{010}$ &  & $\mathbbm{1}_{010}[2]$ & 0 & 0 & 0 \\
+			$IC_{100}$ &  &  & $\mathbbm{1}_{100}[2]$ & 0 & 0 \\
+			$IC_{110}$ &  &  &  & $\mathbbm{1}_{110}[3]$ & 0 \\
+			$IC_{111}$ &  &  &   &   & $\mathbbm{1}_{111}[4]$ \\
+		\end{tabular}
+	\end{center}
 	
+	Moreover, since $\bar{C}_{111}\cong\ba_{\bc}^4$ is smooth, property two of the above allows us to fill in the bottom row as
+	%
+	\begin{center}
+		\begin{tabular}{ c c c c c c}
+			$m_{\tx{geo}}^\lambda$ & $|_{C_{000}}$ & $|_{C_{010}}$ & $|_{C_{100}}$ & $|_{C_{110}}$ & $|_{C_{111}}$ \\
+			\hline 
+			$IC_{000}$ & $\mathbbm{1}_{000}[0]$ & 0 & 0 & 0 & 0\\
+			$IC_{010}$ &  & $\mathbbm{1}_{010}[2]$ & 0 & 0 & 0 \\
+			$IC_{100}$ &  &  & $\mathbbm{1}_{100}[2]$ & 0 & 0 \\
+			$IC_{110}$ &  &  &  & $\mathbbm{1}_{110}[3]$ & 0 \\
+			$IC_{111}$ & $\mathbbm{1}_{111}[0]$ & $\mathbbm{1}_{111}[2]$ & $\mathbbm{1}_{111}[2]$ & $\mathbbm{1}_{111}[3]$ & $\mathbbm{1}_{111}[4]$ \\
+		\end{tabular}
+	\end{center}
 	
-	
-	
-	
-	
-	
-	
-	
+	Likewise, $\bar{C}_{010}\cong \ba_{\bc}^2\cong\bar{C}_{100}$, and thus again by property 2. we can complete the entries of the table as 
+	%
+	\begin{center}
+	\begin{tabular}{ c c c c c c}
+		$m_{\tx{geo}}^\lambda$ & $|_{C_{000}}$ & $|_{C_{010}}$ & $|_{C_{100}}$ & $|_{C_{110}}$ & $|_{C_{111}}$ \\
+		\hline 
+		$IC_{000}$ & $\mathbbm{1}_{000}[0]$ & 0 & 0 & 0 & 0\\
+		$IC_{010}$ & $\mathbbm{1}_{000}[2]$ & $\mathbbm{1}_{010}[2]$ & 0 & 0 & 0 \\
+		$IC_{100}$ & $\mathbbm{1}_{000}[2]$ & 0 & $\mathbbm{1}_{100}[2]$ & 0 & 0 \\
+		$IC_{110}$ &  &  &  & $\mathbbm{1}_{110}[3]$ & 0 \\
+		$IC_{111}$ & $\mathbbm{1}_{111}[0]$ & $\mathbbm{1}_{111}[2]$ & $\mathbbm{1}_{111}[2]$ & $\mathbbm{1}_{111}[3]$ & $\mathbbm{1}_{111}[4]$ \\
+	\end{tabular}
+\end{center}
+%
+	where $IC(\mathbbm{1}_{100})|_{C_{010}}$ as $C_{010}\subsetneq \bar{C}_{100}$.  
 	
 	
 	
@@ -1663,6 +1710,210 @@ x_{21} & 0 & ... & 0 & 0 \\
 	... The moral of the story is that the theory is basically the same here, the stabilizers will be trivial, and the multiplicity table will be immediate. 
 	
 	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	\chapter{The Kazhdan-Lusztig hypothesis for affine Hecke algebras}
+	
+	The goal of this chapter is to understand the statement of \emph{Theorem 8.6.23} of \cite{Chr}, and explicitly describe the notation and the way in which it provides us with an analogue of the Kazhdan-Lusztig hypothesis for affine Hecke algebras.  
+	
+	To begin, we first state the theorem as it appears in \cite{Chr}.  
+	Fix parameters $\psi=(\mb{O}_\psi, \chi_\psi), \phi=(\mb{O}_\phi, \chi_\phi)$, take $x\in\mb{O}_\psi$, and let $i_x:\{x\}\hookrightarrow N$.  
+	
+	\begin{theorem}[Theorem 8.6.23, Chriss \& Ginzburg]
+		The multiplicity of the simple $H_\bullet(Z)$-module $L_\phi$ in the composition series of the $H_\bullet(Z)$-module $H_\bullet(M_x)_\psi$ (rep. $H^\bullet(M_x)_\psi$) is given by
+		%
+		\begin{align*}
+			[H_\bullet(M_x)_\psi L: L L_\phi]&=\sum_k\tx{dim}H^k(i_x^!IC_\phi)_\psi\\
+			\tx{(resp.)} \ \ \ \ \ [H^\bullet(M_x)_\psi L : L_\phi]&=\sum_k\tx{dim}H^k(i_x^!IC_\phi)_\psi
+		\end{align*}
+	\end{theorem}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	\section{Chapter 8 of C+G}
+	
+	
+	
+	\subsection{Intros}
+	
+	It's claimed that the center of the Hecke algebra $\mb{H}$ is 
+	%
+	$$Z(\mb{H})\cong R(G)[q, q^{-1}]\cong R(G\times\bc^\times),$$
+	%
+	which is certainly believable, but it's not clear that this is proved for $p$-adic groups $G$.  
+	$\bc\ten_{\bz}Z(\mb{H})$ is then identified with the algebra of regular class functions on $G\times\bc^\times$, by mapping a character to its representation.  
+	Therefore, any algebra homomorphism $Z(\mb{H})\to\bc$ can be identified with the evaluation homomorphism sending $z\in R(G\times\bc^\times)$ to $z(a)$ at the semi-simple element $a=(s, t)\in G\times\bc^\times$.  
+	
+	Given $a=(s, t)\in G\times\bc^\ast$ semi-simple, we denote $\bc_a$ the 1-dimensional subspace as an $Z(\mb{H})$-module, or equivalently a $R(G\times\bc^\ast)$-module by means of 
+	%
+	\begin{align*}
+		R(G\times\bc^\ast)\times\bc_a&\to\bc_a\\
+		(z, x)&\mapsto z(a)\cdot x. 
+	\end{align*}
+	
+	\begin{definition}[8.1.1, \cite{Chr}]
+		We call the tensor product $\mb{H}_a:=\bc_a\ten_{Z(\mb{H})}\mb{H}$ the \emph{Hecke algebra specialized at } $a$. 
+	\end{definition}
+
+	Observe that 
+	%
+	$$\bc\ten_{\bz}Z(\mb{H})\cong Z(\mb{H}_\bc)\cong Z(\bc\ten_{\bz}\mb{H}).$$
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+	\subsection{The contravariant form}
+	
+	Consider a variety $X$, which i don't believe need necessarily be complex for the next few statements.  
+	Let $Z\subseteq X$ be a locally closed subset, and $i:Z\hookrightarrow X$.
+	For any complex $A\in D^b(X)$, there exists a natural morphism
+	%
+	\begin{align*}
+		\{\tx{sections supported on } Z\}&\to \{\tx{sections supported on a nbd of } Z\}\\
+		i^!A&\to i^\ast A,
+	\end{align*}
+%
+	obtained by applying $i^\ast$ to the canonical morphism $i_!i^1A\to A$ by the fact that $i^\ast i_!(i^!A)\cong i^!A$.
+	
+	We will generally be taking $A=IC(Y, \mc{L})$, with $Y$ a locally closed subvariety of $N$, and $Z=\{x\}$, with $i_x:\{x\}\hookrightarrow X$.  
+	
+	Let $M$ be a smooth complex algebraic variety, $\mu:M\to N$ a proper map, and $\mc{C}_M$ the constant perverse sheaf on $M$, with direct image $\mu_\ast\mc{C}_M$ on $N$.   
+	
+	\begin{lemma}[8.5.4, \cite{Chr}]
+		If $M$ has pure complex dimension $m$ (yet to be defined), then there are natural isomorphisms
+		%
+		$$H^\bullet(M_x)\cong H^{\bullet-m}(i_x^\ast\mc{C}_M), \ \ \ \ \ \ \ \ h_\bullet(M_x)\cong H^{m-\bullet}(i_x^i\mc{C}_M).$$
+	\end{lemma}
+
+	Suppose now that $\mu:M\to N$ is $G$-equivariant, in addition to previous assumptions, and then $N=\coprod \mb{O}$ is partitioned into finitely many $G$-orbits.  
+	Write $\mb{O}_x$ for the orbit containing the point $x\in N$, let $G(x)$ be the stabilizer of $x$, and $K(x)$ a maximal compact subgroup. 
+	
+	Let $S$ be a \emph{local transverse slice} (\emph{Definition 3.2.19, \cite{Chr}}) and $\tilde{S}:=\mu^{-1}(S)$.  
+	
+	\begin{prop}[8.5.16, \cite{Chr}]
+		Given $x\in N$, and irreducible representation $\chi$ of $G(x)/G(x)^\circ$, and writing $\phi=(\mb{O}, \chi)$ where $\mb{O}$ is the orbit of $x$, then there is a natural isomorphism of vector spaces
+		%
+		$$L_\phi\cong\tx{Im}[H_\bullet(M_x)_\chi\to H_\bullet(\tilde{S})_\chi].$$
+	\end{prop}
+	
+	$L_x$ is the "associated multiplicity vector space in $\mu_\ast\mc{C}_M$"???
+	
+	
+	
+	
+	
+	
+	
+	
+
+
+	\section{The final pieces}
+	
+	Given $x\in N$, and $\chi$ an irreducible representation of $G(x)/G(x)^\circ$, 
+	
+	\begin{theorem}[8.6.22, \cite{Chr}]
+		Every $H_\bullet(Z)$-module 
+		%
+		$$L_{x, \chi}:=\tx{Im}[H_\bullet(M_x)_\chi\to H_\bullet(\tilde{S})_\chi],$$
+		%
+		is either trivial or simple, and every simple $H_\bullet(Z)$-module arises in this way. 
+	\end{theorem}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+		\section{Speculation towards the full proof}
+		
+		In this section I speculate on large swaths of the $p$-KLH which might be proved by the use of the result by Chriss \& Ginzburg \cite{Chr}.  
+		We begin by carrying out some exposition from \cite{Sol}.  
+		
+		Let $G$ be a reductive $p$-adic group, and $M$ a Levi subgroup.  
+		Given a supercuspidal representation $(\sigma, E)$ of $M$, let $\mf{s}$ be the inertial class it determines. 
+		
+		Let $M^1$ be the subgroup of $M$ which is generated by all the compact open subgroups.  
+		Define $B=\bc[M^1/M]$ and $E_B:=E\ten_\bc B$, and $\Pi:=\tx{Ind}_P^G(E_B)$.  
+		Then, we have an equivalence of categories
+		%
+		\begin{align*}
+			\tx{Rep}(G)^{\mf{s}}&\xrightarrow{\mc{E}}\tx{End}_G(\Pi)-\tx{Mod}\\
+			V&\mapsto \tx{Hom}_G(\Pi, V).
+		\end{align*}
+	
+	For classical groups and inner forms of $GL_n$, the algebras $\tx{End}_G(\Pi)$ are affine Hecke algebras.  
+	
+	It seems promising that is functor is in fact additive and exact, and thus will induce the coefficient preserving map on Grothendieck groups that I think it ought to. 
+	
+	
 		\begin{thebibliography}{2}
 		
 		\bibitem{ABV} J. Adams, D. Barbasch and D. A. Vogan, Jr. – The Langlands classification
@@ -1684,6 +1935,8 @@ x_{21} & 0 & ... & 0 & 0 \\
 		\bibitem{Hum} J. E. Humphreys, Linear algebraic groups, Spring Verlga New York 1975.
 		
 		\bibitem{Kon} T. Konno, - A note on Langlands’ classification and irreducibility of induced representations of $p$-adic groups. Kyushu Journal of Mathematics 57(2), January 2003. 
+		
+		\bibitem{Sol} \url{https://www.math.ru.nl/~solleveld/EndomorphismAlgebras.pdf}
 		
 		\bibitem{Vog} D. Vogan - The local Langlands conjecture, Representation theory of groups and algebras (J. Adams et al., eds. Contemporary Mathematics 145. American Mathematical Society, 1993.
 		

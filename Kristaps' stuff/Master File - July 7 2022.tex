@@ -1269,7 +1269,7 @@ $$C_0<C_1<C_2<... <C_k,$$
 	
 	More-over,
 	%
-	$$f_\ast\mathbbm{1}_{\tilde{C}_1}[3]=H^\bullet\lb f^{-1}\{Z\}\rb[3]=H^\bullet(pt)[3].$$
+	$$(f_\ast\mathbbm{1}_{\tilde{C}_1}[3]_Z=H^\bullet\lb f^{-1}\{Z\}\rb[3]=H^\bullet(pt)[3].$$
 	
 	Since 
 	%
@@ -1376,7 +1376,7 @@ $$C_0<C_1<C_2<... <C_k,$$
 	%
 	with multi-segments,
 	%
-	$$a_{\tx{max}}=\{0, 0, 1, 2\}, a_l=\{[0, 1], 1, 2\}, a_r=\{0, 1, [1, 2]\}, a_0=\{[0, 2], 1\}, a_{\tx{min}}=\{[0, 1], [1, 2]\}.$$
+	$$a_{\tx{max}}=\{0, 0, 1, 2\}, a_l=\{[0, 1], 1, 2\}, a_r=\{0, 1, [1, 2]\}, a_0=\{[0, 1], [1, 2]\}, a_{\tx{min}}=\{[0, 2], [1]\}.$$
 	
 	The corresponding lattice structure is given by 
 	%
@@ -1482,10 +1482,10 @@ $$C_0<C_1<C_2<... <C_k,$$
 	\item $IC(\mc{L}_C)|_{C'}$ if $C'\subsetneq\bar{C}$.  
 	\end{enumerate}
 	
-	Therefore, properties 1. and 3. immediatly give us the diagonal and upper diagonal respectively, where for now I will write $IC_{ijk}:=IC(C_{ijk}, \mathbbm{1}_{C_{ijk}})$.  
+	Therefore, properties 1. and 3. immediately give us the diagonal and upper diagonal respectively, where for now I will write $IC_{ijk}:=IC(C_{ijk}, \mathbbm{1}_{C_{ijk}})$.  
 	%
 		\begin{center}
-		\begin{tabular}{ c c c c c c}
+		\begin{tabular}{ c | c c c c c}
 			$m_{\tx{geo}}^\lambda$ & $|_{C_{000}}$ & $|_{C_{010}}$ & $|_{C_{100}}$ & $|_{C_{110}}$ & $|_{C_{111}}$ \\
 			\hline 
 			$IC_{000}$ & $\mathbbm{1}_{000}[0]$ & 0 & 0 & 0 & 0\\
@@ -1499,7 +1499,7 @@ $$C_0<C_1<C_2<... <C_k,$$
 	Moreover, since $\bar{C}_{111}\cong\ba_{\bc}^4$ is smooth, property two of the above allows us to fill in the bottom row as
 	%
 	\begin{center}
-		\begin{tabular}{ c c c c c c}
+		\begin{tabular}{ c | c c c c c}
 			$m_{\tx{geo}}^\lambda$ & $|_{C_{000}}$ & $|_{C_{010}}$ & $|_{C_{100}}$ & $|_{C_{110}}$ & $|_{C_{111}}$ \\
 			\hline 
 			$IC_{000}$ & $\mathbbm{1}_{000}[0]$ & 0 & 0 & 0 & 0\\
@@ -1513,7 +1513,7 @@ $$C_0<C_1<C_2<... <C_k,$$
 	Likewise, $\bar{C}_{010}\cong \ba_{\bc}^2\cong\bar{C}_{100}$, and thus again by property 2. we can complete the entries of the table as 
 	%
 	\begin{center}
-	\begin{tabular}{ c c c c c c}
+	\begin{tabular}{ c | c c c c c}
 		$m_{\tx{geo}}^\lambda$ & $|_{C_{000}}$ & $|_{C_{010}}$ & $|_{C_{100}}$ & $|_{C_{110}}$ & $|_{C_{111}}$ \\
 		\hline 
 		$IC_{000}$ & $\mathbbm{1}_{000}[0]$ & 0 & 0 & 0 & 0\\
@@ -1526,10 +1526,322 @@ $$C_0<C_1<C_2<... <C_k,$$
 %
 	where $IC(\mathbbm{1}_{100})|_{C_{010}}$ as $C_{010}\subsetneq \bar{C}_{100}$.  
 	
+	Now, we turn to analyzing the resolution $\pi:\tilde{C}_{110}\to \bar{C}_{110}$ outlined in Joel's notes.  
+	In order to do this, I hastely jump over to his notation, where now we conceive of of the respective 1-by-2 and 2-by-1 sub-matrices $x$ and $y$ as maps $x:E_1\to E_q$ and $y:E_{q^{-1}}\to E_1$.  
+	The notation here reflects the conception of these as linear operators between eigenspaces with eigenvalues consisting of the diagonal entries of $\lambda(\mf{frob})$.  
+	Note too that above I was working with lower triangular Vogans, while Joel is working in the upper triangular case. 
+	I will now switch to the upper triangular version of this story to stay consistent with Joel's notes, and later edit things so that everything is upper-triangular.   
+	That is, from here on out we will write
+	%
+	$$V_\lambda=\begin{bmatrix}
+		0 & x & 0 \\
+		0 & 0 & y\\
+		0 & 0 & 0
+	\end{bmatrix}=\begin{bmatrix}
+	0 & x_1 & x_2 & 0 \\
+	0 & 0 & 0 & y_1 \\
+	0 & 0 & 0 & y_2 \\
+	0 & 0 & 0 & 0
+\end{bmatrix}.$$
+
+	We describe $\tilde{C}_{110}$ as consisting of all $(Z, E_1^{(1)})\in V_\lambda\times \tx{Gr}(1, E_1)$ such that, writing $Z=(x, y)$ 
+	%
+	$$x(E_1)\subseteq E_q, \ \ \ \ \ x(E_1^{(1)})\subseteq 0, \ \ \ \ \ y(E_{q-1})\subseteq E_1^{(1)},$$
+	%
+	for some 1-dimensional subspace $E_1^{(1)}$ of $E_1$.  
+	
+	We wish verify that this map is indeed semi-small, for this, as well as later computations, we must determine its fibers (at least up to homology and dimension).  
+	  
+	First, letting $e_i$ denote the standard basis vectors in $\bc^4$, we write
+	%
+	$$E_q=\tx{span}_\bc\{e_1\}, \ \ \ \ \ \ E_1=\tx{span}_{\bc}\{e_2, e_3\}, \ \ \ \ \ \ E_{q^{-1}}=\tx{span}_{\bc}\{e_4\}.$$
+	
+	First, we make the following computation
+	%
+	$$\begin{bmatrix}
+		0 & \ast & 0 & 0 \\
+		0 & 0 & 0 & 0 \\
+		0 & 0 & 0 & 1\\
+		0 & 0 & 0 & 0
+	\end{bmatrix}\begin{bmatrix}
+	0  \\
+	0 \\
+	0 \\
+	d
+\end{bmatrix}=\begin{bmatrix}
+ 0 \\
+ 0 \\
+ d \\
+ 0
+\end{bmatrix}.
+$$
+	
+	If we take as a representative $Z_{110}$ of $C_{110}$ which is the above matrix with $\ast=1$, then by the conditions on $\tilde{C}_{110}$, this forces $E_1^{(1)}$ to be the space on the right, running over all $d$ (and that $x_{110}$ satisfies its condition as well).  
+	This exhausts all possible choices, and thus we conclude that 
+	%
+	$$\pi^{-1}\{Z_{110}\}\cong\{\tx{pt}\}.$$
+	
+	Consider the representative $Z_{010}$ of $C_{010}$ given now by the above matrix with $\ast=0$, and note that
+	%
+	$$\begin{bmatrix}
+		0 & 0 & 0 & 0 \\
+		0 & 0 & 0 & 0 \\
+		0 & 0 & 0 & 1\\
+		0 & 0 & 0 & 0
+	\end{bmatrix}\begin{bmatrix}
+	0\\
+	0\\
+	0\\
+	d
+\end{bmatrix}=\begin{bmatrix}
+0 \\
+0 \\
+d \\
+0
+\end{bmatrix}.$$
+	
+	By the same reasoning as before, $E_1^{(1)}$ is fixed, and we conclude that 
+	%
+	$$\pi^{-1}\{Z_{010}\}\cong\{\tx{pt}\}.$$
+	
+	Now, we compute the action of a representative $Z_{100}$ of $C_{100}$ on $E_1$ to see that 
+	%
+	$$\begin{bmatrix}
+		0 & 1 & 0 & 0 \\
+		0 & 0 & 0 & 0 \\
+		0 & 0 & 0 & 0 \\
+		0 & 0 & 0 & 0
+	\end{bmatrix}\begin{bmatrix}
+	0 \\
+	b \\
+	c \\
+	0
+\end{bmatrix}=\begin{bmatrix}
+	b \\
+	0 \\ 
+	0 \\
+	0
+\end{bmatrix}.$$
+	
+	Since we have the condition that $x(E_1^{(1)})$, this forces
+	%
+	$$E_1^{(1)}=\tx{span}_{\bc}\{e_3\}.$$
+	
+	Therefore, we again may conclude that
+	%
+	 $$\pi^{-1}\{Z_{100}\}\cong\{\tx{pt}\}.$$ 
+	
+	Finally, we note that for the zero matrix, all the conditions are trivially satisfied, and thus
+	%
+	$$\pi^{-1}\{0\}\cong \tx{Gr}(1, E_1)\cong \mb{P}_{\bc}^1.$$
+	
+	Now we are in place to verify the map is semi-small.  
+	Recall that the condition is that for each orbit $C\leq C_{110}$, we must find that 
+	%
+	$$\dim C+2\dim\pi^{-1}\{Z\}\leq \tilde{C}_{110},$$
+	%
+	where $Z$ is any representative of $C$.  
+	For now, one will have to intuitively see why $\dim\tilde{C}_{110}=3$, but I plan to make this rigorous before too long.  
+	Observe
+	%
+	\begin{align*}
+		\dim C_{110}+2\dim \pi^{-1}\{Z_{110}\}&=3+2\dim\{\tx{pt}\}\\
+		&=3+2(0)\\
+		&=3\\
+		&=\dim\tilde{C}_{110}.  \\
+			\dim C_{010}+2\dim \pi^{-1}\{Z_{010}\}&=2+2\dim\{\tx{pt}\}\\
+		&=2+2(0)\\
+		&<3\\
+		&=\dim\tilde{C}_{110}.\\
+			\dim C_{100}+2\dim \pi^{-1}\{Z_{100}\}&=2+2\dim\{\tx{pt}\}\\
+		&=2+2(0)\\
+		&<3\\
+		&=\dim\tilde{C}_{110}.\\
+			\dim C_{000}+2\dim \pi^{-1}\{0\}&=0+2\dim\mb{P}^1\\
+		&=0+2(1)\\
+		&<3\\
+		&=\dim\tilde{C}_{110}.
+	\end{align*}
+
+	Therefore $\pi$ is semi-small, and the only relevant orbit is $C_{110}$ itself.  
+	Hence, writing $\tilde{\mathbbm{1}}:=\mathbbm{1}_{\tilde{C}_{110}}$, by the decomposition theorem, we know that there is some non-negative integer $m$ such that 
+	%
+	$$\pi_\ast\mathbbm{1}_{\tilde{C}_{110}}[\dim\tilde{C}_{110}]=m IC_{110}.$$
+	
+	Taking stalks at $Z_{010}\in C_{010}$, we find that 
+	%
+	\begin{align*}
+		m\lb IC_{110}\rb_{Z_{010}}&=\lb\pi_\ast\mathbbm{1}_{\tilde{C}_{110}}\rb_{Z_{010}}[3]\\ 
+		mIC_{110}|_{C_{010}}&=H^\bullet\lb\pi^{-1}\{Z_{010}\}\rb[3]\\
+		&=H^\bullet(\{\tx{pt}\})[3]\\
+		&=\lb\mathbbm{1}_{010}[0]\rb[3]\\
+		&=\mathbbm{1}_{010}[3].
+	\end{align*}
+	
+	Therefore $\mathbbm{1}_{010}[3]$ must appear at least once on the left hand side, so $m>0$.  
+	However, if $m>1$, then it would have to appear on the right hand side more than once, which is a contradiction.  
+	Therefore $m=1$ and 
+	%
+	$$IC_{110}|_{010}=\mathbbm{1}_{010}[3].$$
+	
+	An entirely similar argument demonstrates to us that 
+	%
+	$$IC_{110}|_{100}=\mathbbm{1}_{100}[3].$$
+	
+	Finally, keeping in mind that we already know $m=1$,
+	%
+		\begin{align*}
+		\lb IC_{110}\rb_0&=\lb\pi_\ast\mathbbm{1}_{\tilde{C}_{110}}\rb_0[3]\\ 
+			IC_{110}|_{000}&=H^\bullet\lb\pi^{-1}\{0\}\rb[3]\\
+			&=H^\bullet(\mb{P}^1)[3]\\
+			&=\lb\mathbbm{1}_{000}[0]\oplus\mathbbm{1}_{000}[2]\rb[3]\\
+			&=\mathbbm{1}_{000}[3]\oplus\mathbbm{1}_{000}[5].
+		\end{align*}
+	
+	At last we are able to complete our stalk table as
+	%
+	\begin{center}
+		\begin{tabular}{ c | c c c c c}
+			$m_{\tx{geo}}^\lambda$ & $|_{C_{000}}$ & $|_{C_{010}}$ & $|_{C_{100}}$ & $|_{C_{110}}$ & $|_{C_{111}}$ \\
+			\hline 
+			$IC_{000}$ & $\mathbbm{1}_{000}[0]$ & 0 & 0 & 0 & 0\\
+			$IC_{010}$ & $\mathbbm{1}_{000}[2]$ & $\mathbbm{1}_{010}[2]$ & 0 & 0 & 0 \\
+			$IC_{100}$ & $\mathbbm{1}_{000}[2]$ & 0 & $\mathbbm{1}_{100}[2]$ & 0 & 0 \\
+			$IC_{110}$ & $\mathbbm{1}_{000}[3]\oplus\mathbbm{1}_{000}[5]$ & $\mathbbm{1}_{010}[3]$ & $\mathbbm{1}_{100}[3]$ & $\mathbbm{1}_{110}[3]$ & 0 \\
+			$IC_{111}$ & $\mathbbm{1}_{111}[0]$ & $\mathbbm{1}_{111}[2]$ & $\mathbbm{1}_{111}[2]$ & $\mathbbm{1}_{111}[3]$ & $\mathbbm{1}_{111}[4]$ \\
+		\end{tabular}
+	\end{center}
+	
+	Reducing to the total dimension in each entry, we obtain
+	%
+	\begin{center}
+		\begin{tabular}{ c | c c c c c}
+			$m_{\tx{geo}}^\lambda$ & $|_{C_{000}}$ & $|_{C_{010}}$ & $|_{C_{100}}$ & $|_{C_{110}}$ & $|_{C_{111}}$ \\
+			\hline 
+			$IC_{000}$ & 1 & 0 & 0 & 0 & 0\\
+			$IC_{010}$ & 1 & 1 & 0 & 0 & 0 \\
+			$IC_{100}$ & 1 & 0 & 1 & 0 & 0 \\
+			$IC_{110}$ & 2 & 1 & 1 & 1 & 0 \\
+			$IC_{111}$ & 1 & 1 & 1 & 1 & 1 
+		\end{tabular}
+	\end{center}
+	
+	Indeed, this is consistent with our previous computations on the spectral side, and the expectations of the $p$-adic Kazhdan-Lusztig hypothesis.  
 	
 	
 	
 	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	\subsection{An immediate generalization}  
+	
+	Note that the results of the previous section immediately generalize.  
+	That is, consider the cuspidal support
+	%
+	$$S=\{0, \underbrace{1, 1, ..., 1}_{\tx{$k$-times}}, 2\}.$$
+	
+	We have the analogous multi-segments
+	%
+	$$a_{\tx{max}}=\{0, \underbrace{1, 1, ..., 1}_{\tx{$k$-times}}, 2\}, a_l=\{[0, 1], \underbrace{1, 1, ..., 1}_{\tx{$(k-1)$-times}}, 2\}, a_r=\{0, [1, 2], \underbrace{1, 1, ..., 1}_{\tx{$(k-1)$-times}}\},$$
+	%
+	$$ a_0=\{[0, 1], [1, 2], \underbrace{1, 1, ..., 1}_{\tx{$(k-2)$-times}}\}, a_{\tx{min}}=\{[0, 2], \underbrace{1, 1, ..., 1}_{\tx{$(k-1)$-times}}\}.$$
+	
+	The multi-segment lattice takes on the exact same shape as before.  
+	Presumably, it would not be difficult to copy Zelevinsky's computations on the spectral side to reproduce the same multiplicity matrix.  
+	However, at the moment the geometry is more clear to me, and thus I will start there and fill in the spectral side later. 
+	
+	\textbf{Conjecture:}  In some (all?) cases, it's not even the multiplicities that appear which determine the ranks, it's simply the orbit structure.  
+	Or, to put it another way, it's only the \emph{overlaps} that appear.   
+	
+	Again, taking the perspective of the upper-triangular Vogans,
+	%
+	$$V_\lambda=\lset\begin{bmatrix}
+		0 & x & 0 \\
+		0 & 0 & y \\
+		0 & 0 & 0
+	\end{bmatrix}  : x\in\tx{M}_{1,k}(\bc), y\in M_{k, 1}(\bc)\rset,$$
+	%
+	and
+	%
+	$$H_\lambda=\lset\begin{bmatrix}
+		a & 0 & 0 \\
+		0 & B & 0 \\
+		0 & 0 & c
+	\end{bmatrix} : a, c\in \bc, B\in GL_{k}(\bc)\rset.$$
+
+	The orbits are again given by 
+	%
+	$$C_{ijk}=\{(x, y)\in M_{k, 1}(\bc)\times M_{1, k}(\bc) |\tx{rk}(x)=i, \tx{rk}(y)=j, \tx{rk}(yx)=k\},$$
+	%
+	with all possible orbits being 
+	%
+	$$C_{000}, C_{010}, C_{100}, C_{110}, C_{111},$$
+	%
+	which again, take on the same shape.  
+	However in this case, the dimensions can differ.  
+	Indeed
+	%
+	$$\dim C_{000}=0, \ \ \ \ \ \dim C_{010}=k=\dim C_{100}, \ \ \ \ \ \dim C_{110}=???, \ \ \ \ \ \dim C_{111}=k^2.$$
+	
+	I suspect that since $C_{110}$ is just $C_{111}$ carved out by a single linear equation, that it's dimension is $k^2-1$.  
+	I will assume this for now.  
+	
+	As always, we immediately know the upper triangle of the matrix, and since $\bar{C}_{010}\cong\ba_{\bc}^k\cong \bar{C}_{100}$ and $\bar{C}_{111}\cong \ba_{\bc}^{k^2}$, we find
+	%
+		\begin{center}
+		\begin{tabular}{ c | c c c c c}
+			$m_{\tx{geo}}^\lambda$ & $|_{C_{000}}$ & $|_{C_{010}}$ & $|_{C_{100}}$ & $|_{C_{110}}$ & $|_{C_{111}}$ \\
+			\hline 
+			$IC_{000}$ & $\mathbbm{1}_{000}[0]$ & 0 & 0 & 0 & 0\\
+			$IC_{010}$ & $\mathbbm{1}_{000}[k]$ & $\mathbbm{1}_{010}[k]$ & 0 & 0 & 0 \\
+			$IC_{100}$ & $\mathbbm{1}_{000}[k]$ & 0 & $\mathbbm{1}_{100}[k]$ & 0 & 0 \\
+			$IC_{110}$ &  &  &  & $\mathbbm{1}_{110}[k^2-1]$ & 0 \\
+			$IC_{111}$ & $\mathbbm{1}_{111}[0]$ & $\mathbbm{1}_{111}[k]$ & $\mathbbm{1}_{111}[k]$ & $\mathbbm{1}_{111}[k^2-1]$ & $\mathbbm{1}_{111}[k^2]$ \\
+		\end{tabular}
+	\end{center}
+	
+	Again, we have 
+	%
+	$$E_q=\tx{span}_{\bc}\{e_1\}, \ \ \ \ \ \ E_1=\tx{span}_{\bc}\{e_2, ..., e_{k+1}\}, \ \ \ \ \ \tx{span}_{\bc}\{e_{k+2}\},$$
+	%
+	where $x:E_1\to E_q$ and $y:E_{q^{-1}}\to E_1$, and 
+	%
+	$$\tilde{C}_{110}=\{(x, y, E_1^{(1)})\in V_\lambda\times\tx{Gr}(1, E_1) : x(E_1)\subseteq E_q, x(E_1^{(1)})\subseteq 0, y(E_{q^{-1}})\subseteq E_1^{(1)}\}.$$
+	
+	As a representative of $C_{110}$, consider the matrix $Z_{110}$ such that 
+	$x=(1, 0, 0, ..., 0)$ and $y=(0, 0, ..., 0, 1)^t$.  
+	Then, as before, this forces $E_1^{(1)}$ to be the space with all entries but the penultimate to be zero, hence
+	%
+	$$\pi^{-1}\{Z_{110}\}\cong\{\tx{pt}\}.$$
+	
+	The same arguments carry over to show that 
+	%
+	$$\pi^{-1}\{Z_{010}\}\cong\{\tx{pt}\}\cong\pi^{-1}\{Z_{100}\},$$
+	%
+	and finally 
+	%
+	$$\pi^{-1}\{0\}\cong \tx{Gr}(1, E_1)\cong \mb{P}^{k-1}.$$
+	
+	It is certainly much harder to intuit the dimension of $\tilde{C}_{110}$ here, though I suspect it might also be either $\dim\bar{C}_{110}$ or $(k-1)\times\dim\bar{C}_{110}$.  
+	If the former is true, then I'm wrong about the multiplicity table being the same as before.  
+	However in the latter case, there's no relevant orbits, and then I'm stuck on what to do. 
+	
+	If, it is the former case of dimensions, then we will have 
+	%
+	$$IC_{110}|_{010}=\mathbbm{1}_{010}[k^2-1], \ \ \ \ \ \ \ IC_{110}|_{100}=\mathbbm{1}_{100}[k^2-1],$$
+	%
+	and 
+	%
+	$$IC_{110}|_{000}=\bigoplus_{i=0}^{k-1}\mathbbm{1}_{000}[2i].$$
 
 
 	

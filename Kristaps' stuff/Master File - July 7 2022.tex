@@ -1482,7 +1482,8 @@ $$C_0<C_1<C_2<... <C_k,$$
 	\item $IC(\mc{L}_C)|_{C'}$ if $C'\subsetneq\bar{C}$.  
 	\end{enumerate}
 	
-	Therefore, properties 1. and 3. immediately give us the diagonal and upper diagonal respectively, where for now I will write $IC_{ijk}:=IC(C_{ijk}, \mathbbm{1}_{C_{ijk}})$.  
+	Therefore, properties 1. and 3. immediately give us the diagonal and upper diagonal respectively.  
+	That is, writing $\mathbbm{1}_{ijk}:=\mathbbm{1}_{C_{ijk}}$, and $IC_{ijk}:=IC(C_{ijk}, \mathbbm{1}_{ijk})$.  
 	%
 		\begin{center}
 		\begin{tabular}{ c | c c c c c}
@@ -1526,11 +1527,11 @@ $$C_0<C_1<C_2<... <C_k,$$
 %
 	where $IC(\mathbbm{1}_{100})|_{C_{010}}$ as $C_{010}\subsetneq \bar{C}_{100}$.  
 	
-	Now, we turn to analyzing the resolution $\pi:\tilde{C}_{110}\to \bar{C}_{110}$ outlined in Joel's notes.  
+	Now, we turn to analyzing the resolution $\pi:\tilde{C}_{110}\to \bar{C}_{110}$ outlined in \emph{Joel's} notes.  
 	In order to do this, I hastely jump over to his notation, where now we conceive of of the respective 1-by-2 and 2-by-1 sub-matrices $x$ and $y$ as maps $x:E_1\to E_q$ and $y:E_{q^{-1}}\to E_1$.  
 	The notation here reflects the conception of these as linear operators between eigenspaces with eigenvalues consisting of the diagonal entries of $\lambda(\mf{frob})$.  
 	Note too that above I was working with lower triangular Vogans, while Joel is working in the upper triangular case. 
-	I will now switch to the upper triangular version of this story to stay consistent with Joel's notes, and later edit things so that everything is upper-triangular.   
+	I will now switch to the upper triangular version of this story to stay consistent with \emph{Joel's} notes, and later edit things so that everything is upper-triangular.   
 	That is, from here on out we will write
 	%
 	$$V_\lambda=\begin{bmatrix}
@@ -1666,12 +1667,12 @@ d \\
 	Therefore $\pi$ is semi-small, and the only relevant orbit is $C_{110}$ itself.  
 	Hence, writing $\tilde{\mathbbm{1}}:=\mathbbm{1}_{\tilde{C}_{110}}$, by the decomposition theorem, we know that there is some non-negative integer $m$ such that 
 	%
-	$$\pi_\ast\mathbbm{1}_{\tilde{C}_{110}}[\dim\tilde{C}_{110}]=m IC_{110}.$$
+	$$\pi_\ast\tilde{\mathbbm{1}}[\dim\tilde{C}_{110}]=m IC_{110}.$$
 	
 	Taking stalks at $Z_{010}\in C_{010}$, we find that 
 	%
 	\begin{align*}
-		m\lb IC_{110}\rb_{Z_{010}}&=\lb\pi_\ast\mathbbm{1}_{\tilde{C}_{110}}\rb_{Z_{010}}[3]\\ 
+		m\lb IC_{110}\rb_{Z_{010}}&=\lb\pi_\ast\tilde{\mathbbm{1}}\rb_{Z_{010}}[3]\\ 
 		mIC_{110}|_{C_{010}}&=H^\bullet\lb\pi^{-1}\{Z_{010}\}\rb[3]\\
 		&=H^\bullet(\{\tx{pt}\})[3]\\
 		&=\lb\mathbbm{1}_{010}[0]\rb[3]\\
@@ -1691,7 +1692,7 @@ d \\
 	Finally, keeping in mind that we already know $m=1$,
 	%
 		\begin{align*}
-		\lb IC_{110}\rb_0&=\lb\pi_\ast\mathbbm{1}_{\tilde{C}_{110}}\rb_0[3]\\ 
+		\lb IC_{110}\rb_0&=\lb\pi_\ast\tilde{\mathbbm{1}}\rb_0[3]\\ 
 			IC_{110}|_{000}&=H^\bullet\lb\pi^{-1}\{0\}\rb[3]\\
 			&=H^\bullet(\mb{P}^1)[3]\\
 			&=\lb\mathbbm{1}_{000}[0]\oplus\mathbbm{1}_{000}[2]\rb[3]\\

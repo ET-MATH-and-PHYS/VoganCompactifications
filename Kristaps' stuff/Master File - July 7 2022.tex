@@ -2074,6 +2074,109 @@ x_{21} & 0 & ... & 0 & 0 \\
 
 
 
+	\section{Borel Moore homology and convolution}
+	
+	Letting $\hat{X}:=X\cup\{\infty\}$ be the one-point compactification of $X$, we define \emph{Borel-Moore} homology by $H_\bullet^{\tx{BM}}(X)=H_\bullet(\hat{X}, \infty)$, the relative homology of the pair $(x, \infty)$.   
+	
+	Alternatively, for the complex of locally finite infinite singular chains $C_\bullet^{\tx{BM}}(X)$, we find 
+	%
+	$$H_\bullet^{\tx{BM}}(X)\cong H_\bullet(C_\bullet^{\tx{BM}}(X), \di).$$
+	
+	From now own we will write $H_\bullet$ for Borel-Moore, and $H_\bullet^{\tx{ord}}$ for orinary homology. 
+	There also exists a Poincar\'e dualtiy 
+	%
+	$$H_i^{\tx{BM}}(M)\cong H^{m-i}(M).$$
+	
+	Proper maps $f:X\to Y$ can be pushed forward to $f_\ast:H_\bullet(X)\to H_\bullet(Y)$.  
+
+
+	\begin{prop}[2.6.12, \cite{Chr}]
+		Any smooth oriented manifold $X$ has a well-defined \emph{fundamental class} in Borel-Moore homology
+		%
+		$$[X]\in H_m(X), \ \ \ \ \ \ \ m:=\dim_\br X.$$
+	\end{prop}
+
+	Moreover, for us, the essential feature will be that for \emph{any} complex variety, not necessarily smooth or compact, there exists such a fundamental class.  
+	
+	For the Zariski dense open subset $X^{\tx{reg}}$ of non-singular points, $H_m(X)\cong H_m(X^{\tx{reg}})$ is an isomorphism, and as such, we define $[X]\in H_m(X)$ to be the pre-image of $[X^{\tx{reg}}]\in H_m(X^{\tx{reg}})$. 
+	
+	Moreover, if $X$ is an $n$-dimensional complex algebraic variety with $n$-dimensional irreducible components $X_1, ..., X_m$, then the fundamnetal classes $[X_1], ..., [X_m]$ form a basis for $h_{\tx{top}}(X)=H_{2n}$.  
+	
+	Suppose $M$ is a smooth oriented manifold, and $Z, Z'$ are two closed subsets.  
+	We define a bilinear pairing 
+	%
+	$$\cap: H_i(Z)\times H_j(Z')\to H_{i+j-m}(Z\cap Z'), \ \ \ \ \ m=\dim_\br M.$$
+	
+	In order to take cycles with $Z, Z'$ supports into account, we use the cup product from relative homology, together with Poincar\'e duality.  
+	
+	We now turn to convolution, which should really just be though of as "homology valued" composition of multi-valued maps.  
+	
+	Let $\bc(M)$ be the $\bc$-valued functions on the finite set $M$.  
+	For finite sets $M_1, M_2,$ and $M_3$, we define
+	%
+	$$\bc(M_1\times M_2)\ten \bc(M_2\times M_3)\to\bc(M_1\times M_3),$$
+	%
+	by
+	%
+	$$(f_{12}\ast f_{23})(m_1, m_3):=\sum_{m_2\in M_2}f_{12}(m_1, m_2)\cdot f_{23}(m_2, m_3).$$
+	
+	Now, in an entirely similar fashion we suppose that $M_1, M_2,$ and $M_3$ are smooth and compact.  
+	Then for $d:=\dim M_2$, we use the projection maps to define a convolution 
+	%
+	$$\Omega^i(M_1\times M_2)\ten\Omega^j(M_2\times M_3)\to\Omega^{i+j-d}(M_1\times M_3),$$
+	%
+	by
+	%
+	$$f_{12}\ast f_{23}=\int_{M_2}p_{12}^\ast f_{12}\w p_{23}^\ast f_{23}.$$
+	
+	The convolution is compatible with the de Rham operator, in the sense that 
+	%
+	$$d(f_{12}\ast f_{23})=(df_{12})\ast f_{23}+(-1)^jf_{12}\ast (df_{23}),$$
+	%
+	which, by Poincar\'e dualtiy, gives us a convolution in homology. 
+	
+	Suppose now that $M_1, M_2, M_3$ are any connected oriented smooth manifolds, and
+	%
+	$$Z_{12}\subseteq M_1\times M_2, \ \ \ \ \ \ Z_{23}\subseteq M_2\times M_3,$$
+	%
+	are closed subsets.  
+	We define
+	%
+	$$Z_{12}\circ Z_{23}:=\{(m_1, m_3)\in M_1\times M_3 : \exists m_2\in M_2, (m_1, m_2)\in Z_{12} \tx{ and } (m_2, m_3)\in Z_{23}\}.$$
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	\section{Hecke Algebras}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+
+
 
 
 
@@ -2225,6 +2328,64 @@ x_{21} & 0 & ... & 0 & 0 \\
 	For classical groups and inner forms of $GL_n$, the algebras $\tx{End}_G(\Pi)$ are affine Hecke algebras.  
 	
 	It seems promising that is functor is in fact additive and exact, and thus will induce the coefficient preserving map on Grothendieck groups that I think it ought to. 
+	
+	Indeed, according to the notes \emph{Roche}, the very definition of a progenerator includes that it's a projective object, and thus the above equivalence of categories via an exact functor.  
+	However, we still need to know what the Morita equivalence between $\tx{End}_G(\Pi)-\tx{Mod}$ and an affine Hecke algebra looks like, and waht it does to standards.  
+	Thus, we turn to an examination of James' suggested text on what the defining of standard module ought to be.  
+	
+	Suppose $F:\mc{C}\to\mc{D}$ is a an equivalence of Abelian categories, and that $C\in \mc{C}$ is simple, meaning that it only posses two sub-objects, namely $C$ and 0.
+	Suppose that $D$ is a subobject of $F(C)$.  
+	Thus, there is an exact sequence
+	%
+	$$0\to D\to F(C).$$
+	
+	Letting $G:\mc{D}\to\mc{C}$ be the inverse functor, there is an exact sequence
+	%
+	$$0\to G(D)\to GF(C).$$
+	
+	Because $F$ and $G$ form an equivalence of categories, $GF(C)\cong C$, and therefore, we have an exact sequence
+	%
+	$$0\to G(D)\to C.$$
+	
+	However, since $C$ is simple, it must be that $G(D)\cong 0, C$, but this is only possible if $D\cong 0, F(C)$ respectively.  
+	Thus, we see that equivalences of categories preserve simple objects. 
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	\subsection{Defining Standard objects}
+	
+	For the Archimedean side of the story, consider a semi-simple complex Lie algebra $\mf{g}$, and $U:=U(\mf{g})$.  
+	
+	
+	
+	
+	Ultimately the dream is something like this.  
+	We wish to know the multiplicity matrix of $\mf{R}(G)^{\mf{s}}$.  
+	Passing through the equivalence of categories that passes through $\tx{End}_G\Pi$-\tx{Mod}, to get an equivalence of $\mc{H}^{\mf{s}}$-\tx{Mod} (in certain cases), then, letting the standards and their unique simple quotients respectively be $P_1, ..., P_r$ and $S_1, ..., S_r$ in $\mc{H}^{\mf{s}}$, then we can compute 
+	%
+	$$P_i=\sum_{j=1}^r\alpha_{ij}S_j,$$
+	%
+	via the Kazhdan-Lusztig hypothesis, and thus 
+	%
+	$$\mc{F}(P_i)=\sum_{j=1}\alpha_{ij}\mc{F}(S_j),$$
+	%
+	where the sum is still over all standards.  
+	That is, the Kazhdan-Lusztig hypothesis applies to all $\mf{R}(G)^{\mf{s}}$ which are Morita equivalent to affine Hecke algebras. 
 	
 	
 		\begin{thebibliography}{2}

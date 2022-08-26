@@ -74,7 +74,7 @@ class Segment:
         """
         
         # If i <= j storing i and j as upper and lower bounds
-        if i <= j:
+        if i <= j and float(j-i).is_integer():
             self.seg_lower = i
             self.seg_upper = j
             self.empty = empty
@@ -129,10 +129,6 @@ class Segment:
         other : segment
             the segment being compared with
         """
-        
-#         bool1 = self.seg_lower < other.get_segment_lower() and self.seg_upper < other.get_segment_upper()
-#         bool2 = other.get_segment_lower() <= self.get_segment_upper()+1
-#         return bool1 and bool2
         return (self.seg_lower,self.seg_upper) < (other.get_segment_lower(),other.get_segment_upper()) 
     
     def __hash__(self):
@@ -159,6 +155,12 @@ class Segment:
         Returns the upper value of the segment
         """
         return self.seg_upper
+    
+    def get_length(self):
+        """
+        Returns the length of the segment
+        """
+        return self.seg_upper - self.seg_lower + 1
     
     def contains_seg(self, input_seg):
         """
@@ -449,7 +451,7 @@ class Multisegment:
             the segment being compared with
         """
         
-        return Multisegment(self.get_ordering()+other.get_ordering())
+        return Multisegment(self.get_ordering()+other.get_ordering(), segs = True)
     
     def __lt__(self, other):
         """
@@ -473,11 +475,11 @@ class Multisegment:
         
         # Adds the multiplicity of each term in each segment to the support
         for seg, multiplicity in self.multi.items():
-            for j in range(seg.get_segment_lower(),seg.get_segment_upper()+_sage_const_1 ):
-                if j in support.keys():
-                    support[j] += multiplicity
+            for j in range(int(2*seg.get_segment_lower()),int(2*seg.get_segment_upper()+_sage_const_1), 2):
+                if j/2 in support.keys():
+                    support[j/2] += multiplicity
                 else:
-                    support[j] = multiplicity
+                    support[j/2] = multiplicity
         
         return support
                 
@@ -1027,7 +1029,7 @@ class MultisegmentQuot:
             the segment being compared with
         """
         
-        return MultisegmentQuot(self.get_ordering()+other.get_ordering())
+        return MultisegmentQuot(self.get_ordering()+other.get_ordering(), segs = True)
     
     def __lt__(self, other):
         """
@@ -1055,11 +1057,11 @@ class MultisegmentQuot:
         
         # Adds the multiplicity of each term in each segment to the support
         for seg, multiplicity in self.multi.items():
-            for j in range(seg.get_segment_lower(),seg.get_segment_upper()+_sage_const_1 ):
-                if j in support.keys():
-                    support[j] += multiplicity
+            for j in range(int(2*seg.get_segment_lower()),int(2*seg.get_segment_upper()+_sage_const_1), 2):
+                if j/2 in support.keys():
+                    support[j/2] += multiplicity
                 else:
-                    support[j] = multiplicity
+                    support[j/2] = multiplicity
         
         return support
                 
@@ -1427,18 +1429,21 @@ class MultisegmentQuot:
 def left_least(A, min_row = _sage_const_0 ):
     """
     Returns the lowest and left most non-zero element of A along with its indices,
-    where A is organized as being upper left triangular with corresponding rows ordered
-    from top left up.
+    where A is organized as being lower triangular with corresponding rows ordered
+    from bottom left up.
+    
+    The returned variables are the value of the left-least entry, its matrix row and its matrix column
     """
     
     # Initialize number of columns of A
     n = np.shape(A)[_sage_const_0 ]
-    # For each triangle row in the given range, which corresponds to columns of A in
-    # its first row
+    # For each triangle row in the given range
     for i in range(min_row, n):
         # For each entry of the current triangle row, if the entry is non-zero return it
         for j in range(_sage_const_0 ,i+_sage_const_1 ):
             
+            # Note n-1-i+j gives the matrix row associated with the entry, while j gives both
+            # the matrix and triangle column
             if A[n-_sage_const_1 -i+j,j] != _sage_const_0 :
                 return A[n-_sage_const_1 -i+j,j], n-_sage_const_1 -i+j, j
                 
@@ -1475,10 +1480,10 @@ def sub_triag_ones(n, i, j):
     
     
     
-def multi_segment(A, e_top):
+def multi_segment(A, e_bot):
     """
     Returns the multisegment associated with a rank triangle A
-    along with its dimension list
+    along with its eigen list
     """
     
     # Initialize the dictionary for the multisegment
@@ -1496,14 +1501,14 @@ def multi_segment(A, e_top):
         # Find the value and indices where the left-most and lowest left-upper-triangular entry is
         k, i, j = left_least(rank_matr, min_row)
         
-        # Create a submatrix with a subtriangle cenetered at our found entry
+        # Create a submatrix with a subtriangle centered at our found entry
         rank_ones = sub_triag_ones(n, i, j)
         
         # Update the minimum row to the current row
         min_row = j+(n-i-_sage_const_1 )
         
         # Store the value in the entry with a segment key
-        ordering.extend([Segment(e_top-i, e_top-j) for l in range(int(k))])
+        ordering.extend([Segment(j+e_bot, i+e_bot) for l in range(int(k))])
         
         # Subtract off the triangles centered at i,j until rank_matr[i,j] = 0
         rank_matr = rank_matr - k*rank_ones
@@ -1527,7 +1532,7 @@ def rank_triang_array(rank_str):
     """
     
     # Regular expression for eigen_string
-    reg_eigen = r'\([\-?\+?0-9,]*[-+]?[0-9]\)'
+    reg_eigen = r'\([\-?\+?\d+\.?\d*,]*[-+]?\d+\.?\d*\)'
     # Regular expression for a list of rank triangle information
     reg = r'\{[0-9,]*[0-9]\}'
     
@@ -1538,7 +1543,7 @@ def rank_triang_array(rank_str):
     str_list = re.findall(reg, rank_str)
     
     # Obtain list of eigenvalues
-    eigen_list = [int(i) for i in re.findall(r'\-?\+?\d', eigen)]
+    eigen_list = [float(i) for i in re.findall(r'[-+]?\d+\.?\d*', eigen)]
     
     # Obtains the list of lists of integers in the input
     int_lists = [[int(i) for i in re.findall(r'\d',input_str)] for input_str in str_list]
@@ -1638,7 +1643,7 @@ def array_to_triag(rank_array, eigen_list):
     # Initialze row number
     row_num = np.shape(rank_array)[_sage_const_0 ]
     
-    output_str = '   '.join([str(int(j)) for j in eigen_list])+'\n'
+    output_str = '   '.join([str(j) for j in eigen_list])+'\n'
     # Creates the string associated with the rank triangle stored in the lower triangular portion of the matrix
     for i in range(row_num):
         # Joins the integers on the ith diagonal below the main diagonal
@@ -1662,9 +1667,9 @@ def rank_triag(multi_seg):
     """
     
     # Initialize number of rows in the rank triangle
-    row_num = multi_seg.get_max_int()-multi_seg.get_min_int()+_sage_const_1 
-    eigen_list = sorted(list(range(multi_seg.get_min_int(), multi_seg.get_max_int()+_sage_const_1 )),reverse = True)
-    multi_seg = multi_seg.get_shift(_sage_const_1 -eigen_list[-_sage_const_1 ])
+    row_num = int(multi_seg.get_max_int()-multi_seg.get_min_int()+_sage_const_1 )
+    eigen_list = [x/2.0 for x in range(int(2*multi_seg.get_min_int()), int(2*multi_seg.get_max_int()+_sage_const_1), 2)]
+    multi_seg = multi_seg.get_shift(_sage_const_1 -eigen_list[0])
     
     # Obtain the underlying dictionary for the multisegment
     multi_dict = multi_seg.get_dict()
@@ -1672,8 +1677,8 @@ def rank_triag(multi_seg):
     # Initialize array of zeros for the rank triangle
     rank_triang = np.zeros((row_num,row_num))
     for segment in multi_dict.keys():
-        i = row_num - segment.get_segment_lower() # Column index for tip of triangle
-        j = row_num - segment.get_segment_upper() # Row index for tip of triangle
+        i = int(segment.get_segment_upper()-1) # Column index for tip of triangle
+        j = int(segment.get_segment_lower()-1) # Row index for tip of triangle
         
         # Create a submatrix with a subtriangle cenetered at our found entry
         rank_ones = sub_triag_ones(row_num, i, j)
@@ -1681,8 +1686,112 @@ def rank_triag(multi_seg):
         # Adding multiplicity times the triangle associated with the current segment
         rank_triang = rank_triang + multi_dict[segment]*rank_ones
     
-    
     return rank_triang, eigen_list
+
+
+def triag_str_to_latex(triag_str, eigen_list, dollars = True):
+    int_list = str(triag_str).split('\n')
+    int_list = [[int(j) for j in int_list[i].strip().split('   ')] for i in range(1,len(int_list))]
+    
+    # Initialize a latex string for an array for the rank triangle
+    if dollars:
+        latex_str = r"$\begin{array}{" + (_sage_const_2 *len(int_list[_sage_const_0 ])-_sage_const_1 )*"c"+"}"
+    else:
+        latex_str = r"\begin{array}{" + (_sage_const_2 *len(int_list[_sage_const_0 ])-_sage_const_1 )*"c"+"}"
+    latex_str += r" && ".join([str(round(x, 1)) for x in eigen_list]) + r"\\ \hline "
+    for i in range(len(int_list)):
+        latex_str += i*r" & "
+        for j in range(len(int_list[i])):
+            latex_str += str(int_list[i][j])
+            if j < len(int_list[i])-_sage_const_1 :
+                latex_str += r" && "
+        latex_str += i*r" & "
+        
+        if i == _sage_const_0:
+            latex_str += r"\\ \hline"
+        elif i != len(int_list)-_sage_const_1 :
+            latex_str += r" \\ "
+    if dollars:
+        latex_str += r"\end{array}$"
+    else:
+        latex_str += r"\end{array}"
+    
+    return latex_str
+
+def standard_seg(seg):
+    
+    if seg.get_length() == 1:
+        latex_str = r"\nu^{" + str(int(2*seg.get_segment_lower())/2) + r"}"
+    elif seg.get_length() > 1:
+        latex_str = r"Q\left(\text{ind}_{B}^{GL(" + str(int(seg.get_length())) + r")}\left("
+        for i in range(int(2*seg.get_segment_lower()), int(2*seg.get_segment_upper() + 1), 2):
+            latex_str += r" \nu^{" + str(i/2) + "} "
+            if i < int(2*seg.get_segment_upper()):
+                latex_str += r" \boxtimes "
+            else:
+                latex_str += r"\right)\right)"
+        
+    return latex_str
+
+def standard_String(multi):
+    multi_dict = multi.get_dict()
+    segments = sorted(list(multi_dict.keys()), key = lambda seg: (seg.get_segment_lower(),seg.get_segment_upper()), reverse = True)
+    lengths = [int(seg.get_length()) for seg in segments for i in range(multi_dict[seg])]
+    N = sum(lengths)
+    lengths_strs = [str(i) for i in lengths]
+    
+    if len(segments) > 1 or multi_dict[segments[0]] > 1:
+        latex_str = r"$\text{ind}_{P_{" + ",".join(lengths_strs) + r"}}^{GL(" + str(N) + r")}\left("
+        for i in range(len(segments)):
+            seg = segments[i]
+            seg_str = standard_seg(seg)
+            latex_str += (multi_dict[seg]-1)*(seg_str + r" \boxtimes ") + seg_str
+
+            if i < len(segments)-1:
+                latex_str += r" \boxtimes "
+            else:
+                latex_str += r"\right)$"
+    else:
+        latex_str = r"$" + standard_seg(segments[0]) + r"$"
+     
+    display(Markdown(latex_str))
+
+############# Dimension Functions
+
+def rank_dim_Form(rank_triangle):
+    row_num = len(rank_triangle)
+    dim_sum = 0
+    for i in range(row_num):
+        for j in range(i,row_num):
+            row = row_num-1 - i
+            col = row_num-1 - j
+            
+            if row+1 == row_num:
+                term2 = 0
+            else: 
+                term2 = rank_triangle[row+1,col]
+            
+            if col-1 == -1:
+                term1 = 0
+            else:
+                term1 = rank_triangle[row,col-1]
+            
+            dim_sum += (rank_triangle[row,col] - term1)*(rank_triangle[row,col]-term2)
+        
+    return int(dim_sum)
+
+def dim_orbit(rank_triangle):
+    diagonal = np.diag(rank_triangle)
+    square = np.vectorize(lambda x: x**2)
+    squared_diagonal=square(diagonal)
+    
+    dimH = np.sum(squared_diagonal)
+    
+    dimStab = rank_dim_Form(rank_triangle)
+    
+    return dimH-dimStab
+    
+############# Widget Functions 
     
     
 def parse_mseg_string(mseg_string, quot = False):
@@ -1694,8 +1803,8 @@ def parse_mseg_string(mseg_string, quot = False):
     # Checks that the string is surrounded by square braces
     if re.match(r'^\[.*\]$', mseg_string):
         # Defines a regular expression for a segment of integers with arbitrary whitespace
-        regex = r'\[\s*[-+]?[0-9]+\s*,\s*[-+]?[0-9]+\s*\]'
-        regex2 = r'\[\s*[-+]?[0-9]+\s*\]'
+        regex = r'\[\s*[-+]?\d+\.?\d*\s*,\s*[-+]?\d+\.?\d*\s*\]'
+        regex2 = r'\[\s*[-+]?\d+\.?\d*\s*\]'
         
         # Obtain a list of all segments in the mseg_string using the regex
         tuple_list = re.findall(regex, mseg_string)
@@ -1708,21 +1817,21 @@ def parse_mseg_string(mseg_string, quot = False):
             pair = pair.strip("]")
             numbs = pair.split(",")
             # Append the tuple for the given segment to the list
-            seg_list.append((int(numbs[_sage_const_0 ]), int(numbs[_sage_const_1 ])))
+            seg_list.append((float(numbs[_sage_const_0 ]), float(numbs[_sage_const_1 ])))
         
         # Append a tuple for each singleton segment in the list
         for singleton in singleton_list:
             singleton = singleton.strip("[")
             singleton = singleton.strip("]")
             # Append the tuple for the given segment to the list
-            seg_list.append((int(singleton), int(singleton)))
+            seg_list.append((float(singleton), float(singleton)))
         
     if quot:
         multi_seg = MultisegmentQuot(seg_list)
     else:
         # Create a multisegment from the list of segments as tuples
         multi_seg = Multisegment(seg_list)
-    
+   
     # Return the multisegment
     return multi_seg
     
@@ -1782,8 +1891,6 @@ def multi_to_rank(mseg_string):
     Prints the multisegment for a rank triangle
     """
     
-    # Initialize shift number
-    shift = _sage_const_0 
     
     # Obtain multisegment and boolean indicator
     multi_seg= parse_mseg_string(mseg_string)
@@ -1793,28 +1900,7 @@ def multi_to_rank(mseg_string):
     
     # Print the rank triangle
     triag_str=array_to_triag(rank_array, eigen_list)
-    
-    int_list = str(triag_str).split('\n')
-    int_list = [[int(j) for j in int_list[i].strip().split('   ')] for i in range(len(int_list))]
-    
-    # Initialize a latex string for an array for the rank triangle
-    latex_str = r"$\begin{array}{" + (_sage_const_2 *len(int_list[_sage_const_0 ])-_sage_const_1 )*"c"+"}"
-    for i in range(len(int_list)):
-        latex_str += (i-shift)*r" & "
-        for j in range(len(int_list[i])):
-            latex_str += str(int_list[i][j])
-            if j < len(int_list[i])-_sage_const_1 :
-                latex_str += r" && "
-        latex_str += (i-shift)*r" & "
-        
-        if i == _sage_const_0  or i == _sage_const_1 :
-            latex_str += r"\\ \hline"
-        elif i != len(int_list)-_sage_const_1 :
-            latex_str += r" \\ "
-        
-        if i == _sage_const_0 :
-            shift = _sage_const_1 
-    latex_str += r"\end{array}$"
+    latex_str = triag_str_to_latex(triag_str,eigen_list)
     # Display the latex array
     display(Markdown(latex_str))
     
@@ -1847,7 +1933,7 @@ def rank_to_multi_widget():
     Creates an interactive widget for rank_to_multi
     """
     im = widgets.interact_manual(rank_to_multi, 
-                 rank_str_input = widgets.Textarea(value="(2,1,0,-1,2),{2,4,4,4,2},{{2,3,3,2},{1,2,1},{1,1},{0}}", 
+                 rank_str_input = widgets.Textarea(value="(-2,-1,0,1,2),{2,4,4,4,2},{{2,3,3,2},{1,2,1},{1,1},{0}}", 
                                                    description = "Rank-Triangle"));
     im.widget.children[_sage_const_1 ].description = "Run Algorithm"
     im.widget.children[_sage_const_1 ].style.button_color = 'violet'
@@ -2063,27 +2149,7 @@ def dual_rank(rank_str_input):
     # Print the rank triangle
     triag_str=array_to_triag(rank_array, eigen_list)
     
-    int_list = str(triag_str).split('\n')
-    int_list = [[int(j) for j in int_list[i].strip().split('   ')] for i in range(len(int_list))]
-    
-    # Initialize a latex string for an array for the rank triangle
-    latex_str = r"$\begin{array}{" + (_sage_const_2 *len(int_list[_sage_const_0 ])-_sage_const_1 )*"c"+"}"
-    for i in range(len(int_list)):
-        latex_str += (i-shift)*r" & "
-        for j in range(len(int_list[i])):
-            latex_str += str(int_list[i][j])
-            if j < len(int_list[i])-_sage_const_1 :
-                latex_str += r" && "
-        latex_str += (i-shift)*r" & "
-        
-        if i == _sage_const_0  or i == _sage_const_1 :
-            latex_str += r"\\ \hline"
-        elif i != len(int_list)-_sage_const_1 :
-            latex_str += r" \\ "
-        
-        if i == _sage_const_0 :
-            shift = _sage_const_1 
-    latex_str += r"\end{array}$"
+    latex_str = triag_str_to_latex(triag_str,eigen_list)
     # Display the latex array
     display(Markdown(latex_str))
     
@@ -2094,7 +2160,7 @@ def dual_rank_widget():
     Creates an interactive widget for multi_to_rank
     """
     im = widgets.interact_manual(dual_rank, 
-                 rank_str_input = widgets.Textarea(value="(2,1,0,-1,2),{2,4,4,4,2},{{2,3,3,2},{1,2,1},{1,1},{0}}", 
+                 rank_str_input = widgets.Textarea(value="(-2,-1,0,1,2),{2,4,4,4,2},{{2,3,3,2},{1,2,1},{1,1},{0}}", 
                                                    description = "Rank-Triangle"));
     im.widget.children[_sage_const_1 ].description = "Run Algorithm"
     im.widget.children[_sage_const_1 ].style.button_color = 'violet'
@@ -2117,30 +2183,7 @@ def quotient_triangle_table(mseg_string):
         triag_str = array_to_triag(array, e_list)
         
         # Initialize int_list
-        int_list = str(triag_str).split('\n')
-        int_list = [[int(j) for j in int_list[i].strip().split('   ')] for i in range(len(int_list))]
-
-        # Initialize shift
-        shift = _sage_const_0 
-        
-        # Initialize a latex string for an array for the rank triangle
-        latex_str = r"\begin{array}{" + (_sage_const_2 *len(int_list[_sage_const_0 ])-_sage_const_1 )*"c"+"}"
-        for i in range(len(int_list)):
-            latex_str += (i-shift)*r" & "
-            for j in range(len(int_list[i])):
-                latex_str += str(int_list[i][j])
-                if j < len(int_list[i])-_sage_const_1 :
-                    latex_str += r" && "
-            latex_str += (i-shift)*r" & "
-
-            if i == _sage_const_0  or i == _sage_const_1 :
-                latex_str += r"\\ \hline"
-            elif i != len(int_list)-_sage_const_1 :
-                latex_str += r" \\ "
-
-            if i == _sage_const_0 :
-                shift = _sage_const_1 
-        latex_str += r"\end{array}"
+        latex_str = triag_str_to_latex(triag_str, e_list, dollars = False)
         latex_string += latex_str + r" \\ \hline "
     
     latex_string += r"\end{array}$"

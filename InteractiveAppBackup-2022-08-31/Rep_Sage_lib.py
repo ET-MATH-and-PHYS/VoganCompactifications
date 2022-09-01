@@ -32,6 +32,8 @@ class Segment:
         Returns the lower value of the segment
     get_segment_upper()
         Returns the upper value of the segment
+    get_length()
+        Returns the length of the segment
     contains_seg(input_seg)
         Returns if the inputted segment is contained inside the current segment.
     contains(value)
@@ -352,8 +354,54 @@ class Multisegment:
 
     Methods
     -------
-    is_empty()
-        Returns if the segment is empty or not
+    get_support()
+        Returns the support of the multisegment as a multiset
+    get_max()
+        Returns the maximum multisegment associated with the current support
+    get_max_int()
+        Returns the highest segment upper bound in the multisegment
+    get_min_int()
+        Returns the lowest segment lower bound in the multisegment
+    get_shift()
+        Returns a multisegment of the same shape shifted by a specified amount
+    subtract()
+        Reduces the upper bound of each segment by 1
+    clean_dict()
+        Removes any empty segments in the dictionary
+    clean_ordering()
+        Removes any empty segments in the ordering list
+    get_ordering()
+        Returns a copy of the ordering list
+    get_dict()
+        Returns a copy of the segment dictionary
+    get_less_thans()
+        Returns a copy of the list of multisegments less than the current one
+    get_least()
+        Returns the smallest multisegment less than the current one
+    get_map()
+        Return the map associated with the multisegment
+    get_rel()
+        Returns the multisegments less than relation list
+    get_dual()
+        Returns the dual of the multisegment using the Moeglin-Waldspurger algorithm
+    elem_opp()
+        Performs an elementary operation on your multisegment for two given linked segments inside it
+    least()
+        Returns True if the multisegment has no linked segments, and hence has no multisegments less than it
+    compute_less_thans()
+        Computes the list of multisegments less than the current one
+    recurse()
+        A helper function for compute_less_thans()
+    is_computed()
+        Checks if compute_less_thans() has been run
+    greater_than()
+        Returns if the inputted multisegment is less than the current multisegment
+    plot_poset()
+        Plots the poset tree of multisegments less than or equal to the current one
+    print_poset()
+        Prints the multisegments less than or equal to the current one
+    string_format()
+        Defines a string representing the multisegment
     """
     def __init__(self, index_array, segs = False):
         """
@@ -418,8 +466,8 @@ class Multisegment:
         
         Parameters
         ----------
-        other : segment
-            the segment being compared with
+        other : multisegment
+            the multisegment being compared with
         """
         # If the two multisegments have the same dictionary then they are equal
         if other.get_dict() == self.get_dict():
@@ -585,11 +633,11 @@ class Multisegment:
         """
         return deepcopy(self.multi)
     
-    def get_lessThans(self):
-        """
-        Returns the multisegment's less thans list
-        """
-        return deepcopy(self.less_thans)
+#     def get_lessThans(self):
+#         """
+#         Returns the multisegment's less thans list
+#         """
+#         return deepcopy(self.less_thans)
     
     def get_least(self):
         """
@@ -928,8 +976,54 @@ class MultisegmentQuot:
 
     Methods
     -------
-    is_empty()
-        Returns if the segment is empty or not
+    get_support()
+        Returns the support of the multisegment as a multiset
+    get_max()
+        Returns the maximum multisegment associated with the current support
+    get_max_int()
+        Returns the highest segment upper bound in the multisegment
+    get_min_int()
+        Returns the lowest segment lower bound in the multisegment
+    get_shift()
+        Returns a multisegment of the same shape shifted by a specified amount
+    subtract()
+        Reduces the upper bound of each segment by 1
+    clean_dict()
+        Removes any empty segments in the dictionary
+    clean_ordering()
+        Removes any empty segments in the ordering list
+    get_ordering()
+        Returns a copy of the ordering list
+    get_dict()
+        Returns a copy of the segment dictionary
+    get_less_thans()
+        Returns a copy of the list of multisegments less than the current one
+    get_least()
+        Returns the smallest multisegment less than the current one
+    get_map()
+        Return the map associated with the multisegment
+    get_rel()
+        Returns the multisegments less than relation list
+    get_dual()
+        Returns the dual of the multisegment using the Moeglin-Waldspurger algorithm
+    elem_opp()
+        Performs an elementary operation on your multisegment for two given linked segments inside it
+    least()
+        Returns True if the multisegment has no linked segments, and hence has no multisegments less than it
+    compute_less_thans()
+        Computes the list of multisegments less than the current one
+    recurse()
+        A helper function for compute_less_thans()
+    is_computed()
+        Checks if compute_less_thans() has been run
+    greater_than()
+        Returns if the inputted multisegment is less than the current multisegment
+    plot_poset()
+        Plots the poset tree of multisegments less than or equal to the current one
+    print_poset()
+        Prints the multisegments less than or equal to the current one
+    string_format()
+        Defines a string representing the multisegment
     """
     def __init__(self, index_array, segs = False):
         """
@@ -996,8 +1090,8 @@ class MultisegmentQuot:
         
         Parameters
         ----------
-        other : segment
-            the segment being compared with
+        other : multisegment
+            the multisegment being compared with
         """
         # If the two multisegments have the same dictionary then they are equal
         if other.get_dict() == self.get_dict():
@@ -1012,8 +1106,8 @@ class MultisegmentQuot:
         
         Parameters
         ----------
-        other : segment
-            the segment being compared with
+        other : multisegment
+            the multisegment being compared with
         """
         
         return not self.__eq__(other)
@@ -1025,8 +1119,8 @@ class MultisegmentQuot:
         
         Parameters
         ----------
-        other : segment
-            the segment being compared with
+        other : multisegment
+            the multisegment being compared with
         """
         
         return MultisegmentQuot(self.get_ordering()+other.get_ordering(), segs = True)
@@ -1037,13 +1131,21 @@ class MultisegmentQuot:
         
         Parameters
         ----------
-        other : segment
-            the segment being compared with
+        other : multisegment
+            the multisegment being compared with
         """
         
         return self.greater_than(other)
     
     def __le__(self,other):
+        """
+        Defines when a multisegment is less than or equal to another (for quotients)
+        
+        Parameters
+        ----------
+        other : multisegment
+            the multisegment being compared with
+        """
         
         return self < other or self == other
     
@@ -1179,11 +1281,11 @@ class MultisegmentQuot:
         """
         return deepcopy(self.multi)
     
-    def get_lessThans(self):
-        """
-        Returns the multisegment's less thans list
-        """
-        return deepcopy(self.less_thans)
+#     def get_lessThans(self):
+#         """
+#         Returns the multisegment's less thans list
+#         """
+#         return deepcopy(self.less_thans)
     
     def get_map(self):
         """
@@ -1433,6 +1535,13 @@ def left_least(A, min_row = _sage_const_0 ):
     from bottom left up.
     
     The returned variables are the value of the left-least entry, its matrix row and its matrix column
+    
+    Parameters
+    ----------
+    A : matrix
+        the lower triangular matrix containing rank triangle data
+    min_row : integer
+        the minimum non-zero row of the rank triangle, initialized to zero being the bottom point of the triangle
     """
     
     # Initialize number of columns of A
@@ -1450,7 +1559,12 @@ def left_least(A, min_row = _sage_const_0 ):
 
 def one_triag(n):
     """
-    Creates a upper-left triangular array of ones and returns it
+    Creates a lower triangular array of ones and returns it
+    
+    Parameters
+    ----------
+    n : int
+        the size of the square matrix
     """
     
     # Initializes a square nxn array of ones
@@ -1465,7 +1579,17 @@ def one_triag(n):
     
 def sub_triag_ones(n, i, j):
     """
-    Creates an nxn matrix with a upper-left oriented sub-triangle with peak at [i,j]
+    Creates an nxn matrix with a lower-triangular sub-triangle with peak at [j,i]
+    in rank triangle notation, or embedded between the j-i row and columns
+    
+    Parameters
+    ----------
+    n : int
+        the size of the matrix
+    i : int
+        the upper bound of the lower-triangular one block
+    j : int
+        the lower bound of the lower-triangular one block
     """
     # Initializes subtriangle
     T = one_triag(i+_sage_const_1 -j)
@@ -1484,6 +1608,13 @@ def multi_segment(A, e_bot):
     """
     Returns the multisegment associated with a rank triangle A
     along with its eigen list
+    
+    Parameters
+    ----------
+    A : matrix
+        the lower triangular matrix containing rank triangle data
+    e_bot : float
+        the smallest value in the infinitesimal parameter defining the Vogan
     """
     
     # Initialize the dictionary for the multisegment
@@ -1527,8 +1658,16 @@ def multi_segment(A, e_bot):
     
     
 def rank_triang_array(rank_str):
-    """Builds a rank triangle from a rank string
+    """
+    Builds a rank triangle from a rank string
     with the main diagonal containing the dimensions of eigenspaces
+    
+    Parameters
+    ----------
+    rank_str : str
+        a string containing rank data
+    
+    Example input: (-1,0,1), {2,4,2}, {{1,1}, {1}}
     """
     
     # Regular expression for eigen_string
@@ -1565,6 +1704,13 @@ def rank_triang_array(rank_str):
 def rank_str(rank_triang_array, e_list):
     """
     Obtain the input string corresponding with a rank triangle and eigenvalue list
+    
+    Parameters
+    ----------
+    rank_triang_array : matrix
+        the lower triangular matrix containing rank triangle data
+    e_list : list
+        list of floats describing the infinitesimal parameter of our Vogan
     """
     
     # Initialze row number
@@ -1598,6 +1744,13 @@ def triag_to_list(triag_str, eigenvalue_row = False):
     Obtains the input string associated with a triangle string
     
     output format: (e_k,...,e_0),{r_kk,...,r_00},{{r_kk-1,...,r_10},...,{r_k0}}
+    
+    Parameters
+    ----------
+    triag_str : str
+        triangle shaped string for the current rank triangle
+    eigenvalue_row : bool
+        boolean marking whether the string contains a row for eigenvalues
     """
     
     # Initialize rows of integers in the rank triangle
@@ -1639,6 +1792,16 @@ def triag_to_list(triag_str, eigenvalue_row = False):
     
     
 def array_to_triag(rank_array, eigen_list):
+    """
+    Returns the triangle string for a rank triangle from its array data
+    
+    Parameters
+    ----------
+    rank_array : matrix
+        the lower triangular matrix containing rank triangle data
+    eigen_list : list
+        list of floats describing the infinitesimal parameter of our Vogan
+    """
     
     # Initialze row number
     row_num = np.shape(rank_array)[_sage_const_0 ]
@@ -1664,6 +1827,11 @@ def array_to_triag(rank_array, eigen_list):
 def rank_triag(multi_seg):
     """
     Returns the rank triangle associated with a multi-segment 
+    
+    Parameters
+    ----------
+    multi_seg : Multisegment
+        A multisegment describing an orbit in a Vogan
     """
     
     # Initialize number of rows in the rank triangle
@@ -1690,6 +1858,20 @@ def rank_triag(multi_seg):
 
 
 def triag_str_to_latex(triag_str, eigen_list, dollars = True):
+    """
+    Returns a latex_str for a rank triangle from its triangle string
+    
+    Parameters
+    ----------
+    triag_str : str
+        triangle shaped string for the current rank triangle
+    eigen_list : list
+        list of floats describing the infinitesimal parameter of our Vogan
+    dollars : bool
+        boolean indicator for specifiying if the latex expression should be wrapped in $ signs
+    """
+    
+    # Initialize the nested list of integer rows below the dimension line
     int_list = str(triag_str).split('\n')
     int_list = [[int(j) for j in int_list[i].strip().split('   ')] for i in range(1,len(int_list))]
     
@@ -1698,7 +1880,11 @@ def triag_str_to_latex(triag_str, eigen_list, dollars = True):
         latex_str = r"$\begin{array}{" + (_sage_const_2 *len(int_list[_sage_const_0 ])-_sage_const_1 )*"c"+"}"
     else:
         latex_str = r"\begin{array}{" + (_sage_const_2 *len(int_list[_sage_const_0 ])-_sage_const_1 )*"c"+"}"
+    
+    # Adds the row of eigenvalues first
     latex_str += r" && ".join([str(round(x, 1)) for x in eigen_list]) + r"\\ \hline "
+    
+    # For each other row append i & symbols in front and behind for spacing, with two &'s for separating terms
     for i in range(len(int_list)):
         latex_str += i*r" & "
         for j in range(len(int_list[i])):
@@ -1719,7 +1905,17 @@ def triag_str_to_latex(triag_str, eigen_list, dollars = True):
     return latex_str
 
 def standard_seg(seg):
+    """
+    Returns a latex string visualizing the standard representation associated with a segment
     
+    Parameters
+    ----------
+    seg : Segment
+        the segment which is having its standard computed
+    """
+    
+    # If the segment is of length one no induction is needed, otherwise induce from a borel
+    # up to the suitable general linear group and take the unique quotient
     if seg.get_length() == 1:
         latex_str = r"\nu^{" + str(int(2*seg.get_segment_lower())/2) + r"}"
     elif seg.get_length() > 1:
@@ -1727,6 +1923,7 @@ def standard_seg(seg):
         for i in range(int(2*seg.get_segment_lower()), int(2*seg.get_segment_upper() + 1), 2):
             latex_str += r" \nu^{" + str(i/2) + "} "
             if i < int(2*seg.get_segment_upper()):
+                # Boxtimes is used to indicate external tensor products
                 latex_str += r" \boxtimes "
             else:
                 latex_str += r"\right)\right)"
@@ -1734,18 +1931,37 @@ def standard_seg(seg):
     return latex_str
 
 def standard_String(multi):
+    """
+    Returns a latex string visualizing the standard representation associated with a segment
+    
+    Parameters
+    ----------
+    seg : Segment
+        the segment which is having its standard computed
+    """
+    
+    # Initialize the dictionary for the multisegment
     multi_dict = multi.get_dict()
+    
+    # Create a sorted list of segments based on their upper and lower bounds
     segments = sorted(list(multi_dict.keys()), key = lambda seg: (seg.get_segment_lower(),seg.get_segment_upper()), reverse = True)
+    
+    # Initialize a list of segment lengths and sum them to get the size of our general linear group
     lengths = [int(seg.get_length()) for seg in segments for i in range(multi_dict[seg])]
     N = sum(lengths)
+    
+    # Initialize a list of strings for the lengths
     lengths_strs = [str(i) for i in lengths]
     
+    # Create a string for inducing from the appropriate parabolic subgroup if there is more than one segment
     if len(segments) > 1 or multi_dict[segments[0]] > 1:
         latex_str = r"$\text{ind}_{P_{" + ",".join(lengths_strs) + r"}}^{GL(" + str(N) + r")}\left("
         for i in range(len(segments)):
+            # Obtain the standard module for the current segment and add it to the string
+            # for the number of times that segment appears in the multisegment
             seg = segments[i]
             seg_str = standard_seg(seg)
-            latex_str += (multi_dict[seg]-1)*(seg_str + r" \boxtimes ") + seg_str
+            latex_str += (multi_dict[seg]-1)*(seg_str + r" \boxtimes ") + seg_str # Boxtimes is used to indicate external tensor products
 
             if i < len(segments)-1:
                 latex_str += r" \boxtimes "
@@ -1759,8 +1975,22 @@ def standard_String(multi):
 ############# Dimension Functions
 
 def rank_dim_Form(rank_triangle):
+    """
+    Returns the dimension of the stabilizer of a point in the orbit described 
+    by a rank triangle using The Geometry of Representations of Am [ADFK] Lemma 3.2
+    
+    Parameters
+    ----------
+    rank_triangle : matrix
+        the lower triangular matrix containing rank triangle data
+    """
+    
+    # Initialize the number of rows
     row_num = len(rank_triangle)
+    # Initialize the dimension sum to 0
     dim_sum = 0
+    
+    # Apply the double summation formula found in [ADFK] Lemma 3.2
     for i in range(row_num):
         for j in range(i,row_num):
             row = row_num-1 - i
@@ -1781,12 +2011,23 @@ def rank_dim_Form(rank_triangle):
     return int(dim_sum)
 
 def dim_orbit(rank_triangle):
+    """
+    Returns the dimension of the stabilizer of a point in the orbit described 
+    by a rank triangle using the orbit stabilizer theorem
+    
+    Parameters
+    ----------
+    rank_triangle : matrix
+        the lower triangular matrix containing rank triangle data
+    """
+    
+    # Obtain the diagonal of eigen dimensions and sum their squares to get the dimension of H, the group acting on our space
     diagonal = np.diag(rank_triangle)
     square = np.vectorize(lambda x: x**2)
     squared_diagonal=square(diagonal)
-    
     dimH = np.sum(squared_diagonal)
     
+    # Obtain the dimension of the stabilizer of a point in the orbit
     dimStab = rank_dim_Form(rank_triangle)
     
     return dimH-dimStab
@@ -2115,6 +2356,9 @@ def multi_free_matr_widget():
     
     
 def dual_multi(mseg_string):
+    """
+    Obtains the dual multisegment and prints the result
+    """
     
     # Initialize the multisegment
     multi_seg = parse_mseg_string(mseg_string)
@@ -2135,7 +2379,12 @@ def dual_multi_widget():
     
     
 def dual_rank(rank_str_input):
+    """
+    Obtains the dual rank triangle to the input and displays the result
+    """
     
+    # Obtain the rank array and eigen list, as well as the associated multisegment
+    # and its dual
     rank_array, eigen_list = rank_triang_array(rank_str_input)
     multi_seg = multi_segment(rank_array, eigen_list[_sage_const_0 ])
     dual_multi = Multisegment(multi_seg.get_dual(), segs = True)
@@ -2168,15 +2417,22 @@ def dual_rank_widget():
     
     
 def quotient_triangle_table(mseg_string):
+    """
+    Create a table of quotient representations and associated rank triangles below a given multisegment
+    """
     
+    # Initialize the multisegment
     multi_seg = parse_mseg_string(mseg_string, True)
     
+    # Compute the multisegments less than or equal to the inputed one and store them
     multi_seg.compute_less_thans()
-    
     less_thans = multi_seg.get_less_thans()
     
+    # Initialize the first row of the table
     latex_string = r"$\begin{array}{|c|c|}\hline \text{Unique Quotient} & \text{Rank Triangle} \\ \hline "
     
+    
+    # Add a row for each multisegment in the list containing its quotient and rank triangle
     for multi in less_thans:
         latex_string += r"Q(" + multi.__repr__()[_sage_const_1 :-_sage_const_1 ]+") & "
         array, e_list = rank_triag(multi)
@@ -2186,6 +2442,7 @@ def quotient_triangle_table(mseg_string):
         latex_str = triag_str_to_latex(triag_str, e_list, dollars = False)
         latex_string += latex_str + r" \\ \hline "
     
+    # Display the final string
     latex_string += r"\end{array}$"
     display(Markdown(latex_string))
     

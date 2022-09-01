@@ -32,6 +32,12 @@ class Rank_Triangle:
 
     Methods
     -------
+    get_array()
+        returns a copy of the rank triangle array
+    get_inf()
+        returns a copy of the infinitesimal parameter eigen list
+    get_length()
+        returns the size of GLN we are representing
     """
     
     
@@ -43,7 +49,7 @@ class Rank_Triangle:
         # Initialize array and eigenvalue list associated with the rank triangle
         self.array, self.eigen_list = rank_triag(multisegment)
         
-        # Initializes a tuble of rank triangle elements going left to right, top row to bottom row
+        # Initializes a tuple of rank triangle elements going left to right, top row to bottom row
         self.hash_triag = tuple([int(self.array[i+j,j]) for i in range(_sage_const_1 ,self.array.shape[_sage_const_0 ]) for j in range(_sage_const_0 ,self.array.shape[_sage_const_0 ]-i)])
         
     
@@ -241,7 +247,7 @@ def isSmooth(orbit, dim_orbit, dim_space):
 
 
 
-def resolve(orbit, rankTriags, restr_dict, dim_dict, pos, var_t):
+def resolve(orbit, rankTriags, restr_dict, dim_dict, pos, t):
     """
     Computes the IC stalk shifts for the singular orbit inputted using
     a resolution of singularities
@@ -261,17 +267,17 @@ def resolve(orbit, rankTriags, restr_dict, dim_dict, pos, var_t):
     """
     
     # Set the shift of the trivial IC at the orbit to 1 (by defining property of an IC)
-    restr_dict[orbit][orbit] += var_t**(dim_dict[orbit])
+    restr_dict[orbit][orbit] += t**(dim_dict[orbit])
     
     # Initialize list of rank triangles less than the current orbit, a dictionary of fibers for all C
     # in the list, and a dictionary of fiber dimensions
     iter_list = {C for C in rankTriags if C < orbit}
-    fibers = dict([(C,_sage_const_0 *var_t) for C in iter_list])
+    fibers = dict([(C,_sage_const_0 *t) for C in iter_list])
     dim_fibers = dict([(C,_sage_const_0 ) for C in iter_list])
     
     # Computes all of the fibers and fiber dimensions
     for C in iter_list:
-        fibers[C], dim_fibers[C] = fiber(orbit, C, dim_dict, var_t)
+        fibers[C], dim_fibers[C] = fiber(orbit, C, dim_dict, t)
         if dim_fibers[C] == -_sage_const_1 :
             return -_sage_const_1 
         
@@ -280,17 +286,17 @@ def resolve(orbit, rankTriags, restr_dict, dim_dict, pos, var_t):
     
     # Computes the defect of the resolution by taking the max of over all orbits
     for C in iter_list:
-        defect = max(defect, dim_dict[C]+_sage_const_2 *dim_fibers[C] - dim_dict[orbit])
+        defect = max(defect, int(dim_dict[C])+_sage_const_2 *int(dim_fibers[C]) - int(dim_dict[orbit]))
    
     # If defect > 0 go to the non-semi-small case, otherwise we can use the semi-small case
     if defect > _sage_const_0 :
-        non_semi_small(orbit, restr_dict, dim_dict, fibers, defect, pos, var_t)
+        non_semi_small(orbit, restr_dict, dim_dict, fibers, defect, pos, t)
     elif defect == _sage_const_0 :
-        semi_small(orbit, restr_dict, dim_dict, fibers, pos, var_t)
+        semi_small(orbit, restr_dict, dim_dict, fibers, pos, t)
         
         
         
-def non_semi_small(orbit, restr_dict, dim_dict, fibers, defect, pos, var_t):
+def non_semi_small(orbit, restr_dict, dim_dict, fibers, defect, pos, t):
     """
     Computes the IC stalk shifts for the singular orbit inputted using
     the current non-semi-small resolution of singularities
@@ -313,7 +319,7 @@ def non_semi_small(orbit, restr_dict, dim_dict, fibers, defect, pos, var_t):
     
     # Initialize dictionary of multiplicities, where each value is a dictionary which
     # will contain shifts as keys and multiplicities of shifts as values
-    multiplicities = dict([(C,_sage_const_0 *var_t) for C in fibers.keys()])
+    multiplicities = dict([(C,_sage_const_0 *t) for C in fibers.keys()])
     
     # Initialize set of orbits with computed multiplicities
     computed = set()
@@ -340,14 +346,6 @@ def non_semi_small(orbit, restr_dict, dim_dict, fibers, defect, pos, var_t):
             # to ensure there are no larger orbits which have not yet been computed
             interval = set(pos.open_interval(C,orbit))
             if interval.issubset(computed):
-                # Adds the non-computed C after testing the interval
-                interval = interval.union({C})
-                
-                
-                # Use the fact that IC(C')|C is contained in degrees D, dim C < D <= dim C' for C < C'
-                    # Also use the fact that the shifts will be contained in the interval [-defect,defect]
-                    # Note we use Poincare-Verdier duality to obtain the symmetry in the following polynomial
-                multiplicities[C] = sum([fibers[C].coefficient(var_t**(dim_dict[C]-i))*(var_t**(-i)+var_t**i) for i in range(_sage_const_0 ,int(defect)+_sage_const_1 )]) 
                 
                 # Initialize the shift dictionary for the orbit at C to be C's fiber's cohomology
                 restr_dict[orbit][C] = fibers[C]
@@ -355,8 +353,25 @@ def non_semi_small(orbit, restr_dict, dim_dict, fibers, defect, pos, var_t):
                 
                 # Subtract off the terms occuring in other IC's according to their multiplicities
                 restr_dict[orbit][C] = restr_dict[orbit][C] - sum([multiplicities[C2]*restr_dict[C2][C] for C2 in interval])
-               
+                
             
+                # Use the fact that IC(C')|C is contained in degrees D, dim C < D <= dim C' for C < C'
+                    # Also use the fact that the shifts will be contained in the interval [-defect,defect]
+                    # Note we use Poincare-Verdier duality to obtain the symmetry in the following polynomial
+                multiplicities[C] = _sage_const_0 *t
+                for i in range(_sage_const_0 ,int(defect)+_sage_const_1 ):
+                    if dim_dict[C]-i != _sage_const_0  and i != _sage_const_0 :
+                        multiplicities[C] += restr_dict[orbit][C].coefficient(t**(dim_dict[C]-i))*(t**(-i)+t**i)
+                    elif dim_dict[C]-i != _sage_const_0  and i == _sage_const_0 :
+                        multiplicities[C] += restr_dict[orbit][C].coefficient(t**(dim_dict[C]-i))
+                    elif dim_dict[C]-i == _sage_const_0  and i != _sage_const_0 :
+                        multiplicities[C] += restr_dict[orbit][C].constant_coefficient()*(t**(-i)+t**i)
+                    elif dim_dict[C]-i == _sage_const_0  and i == _sage_const_0 :
+                        multiplicities[C] += restr_dict[orbit][C].constant_coefficient()
+                        
+                # Remove terms from current orbits
+                restr_dict[orbit][C] = restr_dict[orbit][C] - multiplicities[C]*restr_dict[C][C]
+                
                 # Add C to the set of computed orbits
                 computed.add(C)
             else:
@@ -368,8 +383,7 @@ def non_semi_small(orbit, restr_dict, dim_dict, fibers, defect, pos, var_t):
         cover_list = iter_list.difference(next_step)
         
         
-        
-def semi_small(orbit, restr_dict, dim_dict, fibers, pos, var_t):
+def semi_small(orbit, restr_dict, dim_dict, fibers, pos, t):
     """
     Computes the IC stalk shifts for the singular orbit inputted using
     the current semi-small resolution of singularities
@@ -389,7 +403,7 @@ def semi_small(orbit, restr_dict, dim_dict, fibers, pos, var_t):
     """
     # Initialize dictionary of multiplicities, where all shifts are zero
     # since our resolution is semi-small
-    multiplicities = dict([(C,_sage_const_0 *var_t) for C in fibers.keys()])
+    multiplicities = dict([(C,_sage_const_0 *t) for C in fibers.keys()])
     
     # Initialize set of orbits with computed multiplicities
     computed = set()
@@ -415,17 +429,23 @@ def semi_small(orbit, restr_dict, dim_dict, fibers, pos, var_t):
             interval = set(pos.open_interval(C,orbit))
             if interval.issubset(computed):
                 
-                # If the dimension of C occurs as a shift in the cohomology of its fiber, then set 
-                # its multiplicity to be the multiplicity of that shift
-                multiplicities[C] = fibers[C].coefficient(var_t**(dim_dict[C]))
-                    
                 # Initialize the shift dictionary for the orbit at C to be C's fiber's cohomology
                 restr_dict[orbit][C] = fibers[C]
-                
                 
                 # Subtract off the terms occuring in other IC's according to their multiplicities
                 restr_dict[orbit][C] = restr_dict[orbit][C] - sum([multiplicities[C2]*restr_dict[C2][C] for C2 in interval])
                 
+                
+                # If the dimension of C occurs as a shift in the cohomology of its fiber, then set 
+                # its multiplicity to be the multiplicity of that shift
+                if dim_dict[C] != _sage_const_0 :
+                    multiplicities[C] = restr_dict[orbit][C].coefficient(t**(dim_dict[C]))
+                else:
+                    multiplicities[C] = restr_dict[orbit][C].constant_coefficient()
+                
+                # Remove terms from current orbits
+                restr_dict[orbit][C] = restr_dict[orbit][C] - multiplicities[C]*restr_dict[C][C]
+                    
                 
                 # Add C to the set of computed orbits
                 computed.add(C)
@@ -437,13 +457,11 @@ def semi_small(orbit, restr_dict, dim_dict, fibers, pos, var_t):
         # Initialize the next list orbits to obtain lower covers for as the immediate previously computed orbits
         cover_list = iter_list.difference(next_step)
         
-        # Remove all shifts which have nonpositive multiplicities
         
         
         
         
-        
-def product_cohom(cohom, list_of_cohom, var_t):
+def product_cohom(cohom, list_of_cohom, t):
     """
     Computes the tensor product of a collection of cohomologies using recursion
 
@@ -458,13 +476,13 @@ def product_cohom(cohom, list_of_cohom, var_t):
     # If the list is of length greater than one, perform recursion by taking the product with the 
     # cohomology of the product of the list elements with themselves
     if len(list_of_cohom) > _sage_const_1 :
-        return cohom*product_cohom(list_of_cohom[_sage_const_0 ], list_of_cohom[_sage_const_1 :])
+        return cohom*product_cohom(list_of_cohom[_sage_const_0 ], list_of_cohom[_sage_const_1 :], t)
     elif len(list_of_cohom) == _sage_const_1 : # Else, use distributivity to compute the product explicitly
         return cohom*list_of_cohom[_sage_const_0 ]
         
         
         
-def grassman_cohom(grassman_pair, var_t, shift = _sage_const_0 ):
+def grassman_cohom(grassman_pair, t, shift = _sage_const_0 ):
     """
     Computes the cohomology of a grassmannian (with a possible added shift)
 
@@ -483,7 +501,7 @@ def grassman_cohom(grassman_pair, var_t, shift = _sage_const_0 ):
     # with the occurences found in the partition.
     cohom_pol = _sage_const_0 
     for i in partition_dict.keys():
-        cohom_pol += partition_dict[i]*var_t**(-_sage_const_2 *i + shift)
+        cohom_pol += partition_dict[i]*t**(-_sage_const_2 *i + shift)
     
     # Returns the cohomology dictionary
     return cohom_pol
@@ -515,9 +533,11 @@ def partitions(k,n):
     
     
     
-def fiber(res_orbit, sub_orbit, dim_dict, var_t):
+def fiber(res_orbit, sub_orbit, dim_dict, t):
     """
     Computes the fiber of an element in sub_orbit in the resolution of res_orbit
+        
+        This method is incomplete and only works for rank triangles of a particular form
     """
     
     # Initialize number of eigenspaces
@@ -532,38 +552,38 @@ def fiber(res_orbit, sub_orbit, dim_dict, var_t):
     
     # Obtain the array 
     diag = np.diag(res_array, k = _sage_const_0 )[_sage_const_1 :]
-    
     # Obtains a list of all diagonals
     res_diags = [np.diag(res_array, k = -l) for l in range(_sage_const_1 ,length)]
     sub_diags = [np.diag(sub_array, k = -l) for l in range(_sage_const_1 ,length)]
     
+    # Explained in the compactifications and resolutions overleaf document
     if length == _sage_const_2 : 
+        dimension = _sage_const_0 
+        fiber_list.append(grassman_cohom((res_diags[_sage_const_0 ][_sage_const_0 ]-sub_diags[_sage_const_0 ][_sage_const_0 ], diag[_sage_const_0 ]- sub_diags[_sage_const_0 ]), 
+                                         t, shift=dim_dict[res_orbit]))
+        dimension += (res_diags[_sage_const_0 ][_sage_const_0 ]-sub_diags[_sage_const_0 ][_sage_const_0 ])*(diag[_sage_const_0 ]-res_diags[_sage_const_0 ][_sage_const_0 ])
         
-        for i in range(len(res_diags[_sage_const_0 ])):
-            fiber_list.append(grassman_cohom((res_diags[_sage_const_0 ][i]-sub_diags[_sage_const_0 ][i],
-                                              diag[i]-sub_diags[_sage_const_0 ][i]), var_t, shift = dim_dict[res_orbit]))
     elif length == _sage_const_3  and diag[-_sage_const_1 ] == _sage_const_1 :
         
-        
+        dimension = _sage_const_0 
         for i in range(len(res_diags[_sage_const_0 ])):
             if res_diags[-_sage_const_1 ][_sage_const_0 ] == _sage_const_0  and i == _sage_const_0 :
                 fiber_list.append(grassman_cohom((res_diags[_sage_const_0 ][i]-sub_diags[_sage_const_0 ][i],
-                                                  diag[i]-sub_diags[_sage_const_0 ][i]-sub_diags[_sage_const_0 ][i+_sage_const_1 ]), var_t, shift = dim_dict[res_orbit]))
+                                                  diag[i]-sub_diags[_sage_const_0 ][i]-sub_diags[_sage_const_0 ][i+_sage_const_1 ]), t, shift = dim_dict[res_orbit]))
+                dimension += (res_diags[_sage_const_0 ][i]-sub_diags[_sage_const_0 ][i])*(diag[i]-res_diags[_sage_const_0 ][i]-sub_diags[_sage_const_0 ][i+_sage_const_1 ])
             elif res_diags[_sage_const_0 ][i]-sub_diags[_sage_const_0 ][i] != _sage_const_0  and res_diags[_sage_const_0 ][i]-sub_diags[_sage_const_0 ][i] != diag[i]-sub_diags[_sage_const_0 ][i]:
                 fiber_list.append(grassman_cohom((res_diags[_sage_const_0 ][i]-sub_diags[_sage_const_0 ][i],
-                                                  diag[i]-sub_diags[_sage_const_0 ][i]), var_t, shift = dim_dict[res_orbit]))
+                                                  diag[i]-sub_diags[_sage_const_0 ][i]), t, shift = dim_dict[res_orbit]))
+                dimension += (res_diags[_sage_const_0 ][i]-sub_diags[_sage_const_0 ][i])*(diag[i]-res_diags[_sage_const_0 ][i])
     elif length > _sage_const_3  or diag[-_sage_const_1 ] > _sage_const_1 :
         return [], -_sage_const_1 
     
     if len(fiber_list) == _sage_const_1 :
         fiber = fiber_list[_sage_const_0 ]
-        dimension = fiber.subs(var_t = _sage_const_1 )
     elif len(fiber_list) > _sage_const_1 :
-        fiber = product_cohom(fiber_list[_sage_const_0 ],fiber_list[_sage_const_1 :])
-        dimension = fiber.subs(var_t = _sage_const_1 )
+        fiber = product_cohom(fiber_list[_sage_const_0 ],fiber_list[_sage_const_1 :], t)
     elif len(fiber_list) == _sage_const_0 :
-        fiber = var_t**(dim_dict[res_orbit])
-        dimension = fiber.subs(var_t = _sage_const_1 )
+        fiber = t**(dim_dict[res_orbit])
     
     return fiber, dimension
     
@@ -718,10 +738,9 @@ def display_GeomMatrix(infParam, print_orbs = False, polynomials = False):
     latex_str_backup = latex_str
     # Sorts the rank triangles so the resulting array is lower triangular
     if len(infParam) == _sage_const_1 :
-        rankTriagsSorted = sorted(rankTriags, key = lambda x:(x.get_array()[_sage_const_1 ,_sage_const_0 ],sum(x.get_array())))
+        rankTriagsSorted = sorted(rankTriags, key = lambda X:dim_dict[X])
     else:
-        rankTriagsSorted = sorted(rankTriags, key = lambda x:(sum([C.get_array()[_sage_const_1 ,_sage_const_0 ] for C in x]), 
-                                                              sum([sum(C.get_array()) for C in x])) )
+        rankTriagsSorted = sorted(rankTriags, key = lambda x:(sum([dim_dict[C] for C in x])) )
     
     # Sets the first row as restrictions to each orbit
     for i in range(len(rankTriagsSorted)):
@@ -735,7 +754,6 @@ def display_GeomMatrix(infParam, print_orbs = False, polynomials = False):
     # Sets all following rows as IC's follows by sums of shifts of local systems, with associated multiplicities
     for i in range(len(rankTriagsSorted)):
         latex_str += r"IC(" + repr(rankTriagsSorted[i]) + r", \mathbb{1}_{" + repr(rankTriagsSorted[i]) + r"}) & "
-        
         IC_dict = restr_dict[rankTriagsSorted[i]]
         for j in range(len(rankTriagsSorted)):
             shift_dict = IC_dict[rankTriagsSorted[j]].dict()
@@ -756,7 +774,7 @@ def display_GeomMatrix(infParam, print_orbs = False, polynomials = False):
                             latex_str += str(multiplicity) + r"\mathbb{1}_{" + repr(rankTriagsSorted[j]) + r"}[" + str(shift[_sage_const_0 ]) + r"]"
                         elif multiplicity == _sage_const_1 :
                             latex_str += r"\mathbb{1}_{" + repr(rankTriagsSorted[j]) + r"}[" + str(shift[_sage_const_0 ]) + r"]"
-                        else:
+                        elif k > _sage_const_1 :
                             latex_str = latex_str_backup
                         latex_str_backup = latex_str
                         if k < len(shift_dict.keys()) - _sage_const_1 :
@@ -782,9 +800,9 @@ def display_orbits(rankTriagsSorted):
     for C in rankTriagsSorted:
         print(repr(C) + ": ")
         if type(C) is tuple:
-            multis = [multi_segment(orbit.get_array(), orbit.get_inf()[0]) for orbit in C]
-            multi = multis[0]
-            for multiseg in multis[1:]:
+            multis = [multi_segment(orbit.get_array(), orbit.get_inf()[_sage_const_0 ]) for orbit in C]
+            multi = multis[_sage_const_0 ]
+            for multiseg in multis[_sage_const_1 :]:
                 multi = multi + multiseg
             Orbit, eigen = rank_triag(multi)
             display(Markdown(triag_str_to_latex(array_to_triag(Orbit, eigen), eigen)))
@@ -831,14 +849,13 @@ def display_SpecMatrix(infParam, print_multis = False):
     latex_str_backup = latex_str
     # Sorts the rank triangles so the resulting array is lower triangular
     if len(infParam) == _sage_const_1 :
-        rankTriagsSorted = sorted(rankTriags, key = lambda x:(x.get_array()[_sage_const_1 ,_sage_const_0 ],sum(x.get_array())))
+        rankTriagsSorted = sorted(rankTriags, key = lambda X:dim_dict[X])
     else:
-        rankTriagsSorted = sorted(rankTriags, key = lambda x:(sum([C.get_array()[_sage_const_1 ,_sage_const_0 ] for C in x]), 
-                                                              sum([sum(C.get_array()) for C in x])))
+        rankTriagsSorted = sorted(rankTriags, key = lambda x:(sum([dim_dict[C] for C in x])) )
     
     # Sets the first row as restrictions to each orbit
     for i in range(len(rankTriagsSorted)):
-        latex_str += r"M_Q(a_{" + repr(rankTriagsSorted[i]) + "})"
+        latex_str += r"Q(a_{" + repr(rankTriagsSorted[i]) + "})"
         
         if i < len(rankTriagsSorted)-_sage_const_1 :
             latex_str += r" & "
@@ -847,7 +864,7 @@ def display_SpecMatrix(infParam, print_multis = False):
     
     # Sets all following rows as IC's follows by sums of shifts of local systems, with associated multiplicities
     for i in range(len(rankTriagsSorted)):
-        latex_str += r"Q(a_{" + repr(rankTriagsSorted[i]) + r"}) & "
+        latex_str += r"M_Q(a_{" + repr(rankTriagsSorted[i]) + r"}) & "
         
         for j in range(len(rankTriagsSorted)):
             shift_pol = restr_dict[rankTriagsSorted[j]][rankTriagsSorted[i]]

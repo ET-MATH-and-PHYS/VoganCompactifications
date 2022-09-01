@@ -689,14 +689,32 @@ def geomMatrix(infParam, t):
     
     
 def prodGeomMatrix(infParamList, t):
+    """"
+    This function computes the geometric matrix for a product of Vogan varities given
+    by a list of infinitesimal parameters
     
+    Parameters
+    ----------
+    infParamList : list
+        A list of infinitesimal parameters given by lists of exponents
+    """
+    
+    # Compute the geometric matrix for each infinitesimal parameter
     voganTriples = [geomMatrix(infParam, t) for infParam in infParamList]
     
+    # Take the cartesian product of the lists of orbits in each Vogan to obtain
+    # the orbits in the product Vogan
     rankTriags = [triple[_sage_const_1 ] for triple in voganTriples]
     rankTriags = list(cart_prod(*rankTriags))
+    
+    # Define the dimension dictionary of the orbits in the product using the sum of dimensions 
+    # of the component orbits
     dim_dict = dict([(C,sum([voganTriples[i][_sage_const_2 ][C[i]] for i in range(len(voganTriples))])) for C in rankTriags])
     
+    # Initialize a nested dictionary for storing stalks as polynomials
     restr_dict = dict([(C,dict([(C2, _sage_const_0 *t) for C2 in rankTriags])) for C in rankTriags])
+    
+    # Take the product of the stalk polynomials of the component orbits for each orbit in the product Vogan
     for C in rankTriags:
         for C2 in rankTriags:
             restr_dict[C][C2] = prod([voganTriples[i][_sage_const_0 ][C[i]][C2[i]] for i in range(len(voganTriples))])
@@ -711,8 +729,8 @@ def display_GeomMatrix(infParam, print_orbs = False, polynomials = False):
     
     Parameters
     ----------
-    infParam :
-        A multiset of twists associated with an infinitesimal parameter
+    infParam : list
+        A multiset of exponents associated with an infinitesimal parameter
      
     Example input: 
         [1, 0, 0, 0, -1]
@@ -737,10 +755,7 @@ def display_GeomMatrix(infParam, print_orbs = False, polynomials = False):
     latex_str += r"m_{geo}^{\lambda} & "
     latex_str_backup = latex_str
     # Sorts the rank triangles so the resulting array is lower triangular
-    if len(infParam) == _sage_const_1 :
-        rankTriagsSorted = sorted(rankTriags, key = lambda X:dim_dict[X])
-    else:
-        rankTriagsSorted = sorted(rankTriags, key = lambda x:(sum([dim_dict[C] for C in x])) )
+    rankTriagsSorted = sorted(rankTriags, key = lambda X:dim_dict[X])
     
     # Sets the first row as restrictions to each orbit
     for i in range(len(rankTriagsSorted)):
@@ -797,9 +812,22 @@ def display_GeomMatrix(infParam, print_orbs = False, polynomials = False):
         
         
 def display_orbits(rankTriagsSorted):
+    """
+    Displays a latex formatted description of all orbits in the given sorted list.
+    If an orbit is given as a product of (presumed) non-linked Vogans then the 
+    corresponding rank triangle is constructed with the rank triangles of the 
+    component orbits as sub-triangles.
+    
+    Parameters:
+    -----------
+    rankTriagsSorted : list
+        a sorted list of rank triangle objects, or tuples of rank triangle objects
+    """
     for C in rankTriagsSorted:
         print(repr(C) + ": ")
         if type(C) is tuple:
+            # Adjoin the rank triangles by creating the union of the multisegments
+            # attached to each rank triangle, and then converting the result to a rank triangle
             multis = [multi_segment(orbit.get_array(), orbit.get_inf()[_sage_const_0 ]) for orbit in C]
             multi = multis[_sage_const_0 ]
             for multiseg in multis[_sage_const_1 :]:
@@ -848,10 +876,7 @@ def display_SpecMatrix(infParam, print_multis = False):
     latex_str += r"m_{spec}^{\lambda} & "
     latex_str_backup = latex_str
     # Sorts the rank triangles so the resulting array is lower triangular
-    if len(infParam) == _sage_const_1 :
-        rankTriagsSorted = sorted(rankTriags, key = lambda X:dim_dict[X])
-    else:
-        rankTriagsSorted = sorted(rankTriags, key = lambda x:(sum([dim_dict[C] for C in x])) )
+    rankTriagsSorted = sorted(rankTriags, key = lambda X:dim_dict[X])
     
     # Sets the first row as restrictions to each orbit
     for i in range(len(rankTriagsSorted)):
@@ -886,9 +911,17 @@ def display_SpecMatrix(infParam, print_multis = False):
         
         
 def display_Standards(rankTriagsSorted):
+    """
+    Displays a latex formatted description of all multisegments in the given sorted list.
     
+    Parameters:
+    -----------
+    rankTriagsSorted : list
+        a sorted list of rank triangle objects, or tuples of rank triangle objects
+    """
     for C in rankTriagsSorted:
         if type(C) is tuple:
+            # Adjoin the multisegments of the component orbits in the product
             multis = [multi_segment(orbit.get_array(), orbit.get_inf()[_sage_const_0 ]) for orbit in C]
             multi = multis[_sage_const_0 ]
             for multiseg in multis[_sage_const_1 :]:
@@ -910,8 +943,25 @@ def display_Standards(rankTriagsSorted):
 
 
 def geom_matr(infParam, print_orbs = False, polynomials = False):
+    """
+    Computes and displays the geometric multiplicity matrix for an infinitesimal parameter
+    given as a string of a specified form.
+    
+    Parameters:
+    -----------
+    infParam : str
+        string describing a product of non-linked infinitesimal parameter runs
+    print_orbs : bool
+        boolean codifying if the orbits should be printed
+    polynomials : bool
+        boolean codifying if the restrictions should be represented by Kazhdan-Lusztig polynomials
+    """
+    
+    # Separates the segments in the larger infinitesimal parameter and turns them into a list of lists of floats
     infParamStr = infParam.replace(" ","").split(":")
     infParam = [[float(i) for i in re.findall(r'[-+]?\d+\.?\d*', subinfParam)] for subinfParam in infParamStr]
+    
+    # Check that all segments in the larger infinitesimal parameter are not linked and are not missing terms
     for i in range(len(infParam)):
         param = set(infParam[i])
         if not set([i/_sage_const_2p0  for i in range(int(_sage_const_2 *min(param)),int(_sage_const_2 *max(param))+_sage_const_1 , _sage_const_2 )]).issubset(param):
@@ -922,14 +972,30 @@ def geom_matr(infParam, print_orbs = False, polynomials = False):
             if param.intersection(set(infParam[j])) != set():
                 print("Infinitesimal parameter segments must not be linked")
                 return
-        
+    
+    # Display the geometric matrix
     display_GeomMatrix(infParam, print_orbs = print_orbs, polynomials = polynomials)
     
     
     
 def spec_matr(infParam, print_multis = False):
+    """
+    Computes and displays the spectral multiplicity matrix for an infinitesimal parameter
+    given as a string of a specified form.
+    
+    Parameters:
+    -----------
+    infParam : str
+        string describing a product of non-linked infinitesimal parameter runs
+    print_multis : bool
+        boolean codifying if the standard representations should be printed
+    """
+    
+    # Separates the segments in the larger infinitesimal parameter and turns them into a list of lists of floats
     infParamStr = infParam.replace(" ","").split(":")
     infParam = [[float(i) for i in re.findall(r'[-+]?\d+\.?\d*', subinfParam)] for subinfParam in infParamStr]
+    
+    # Check that all segments in the larger infinitesimal parameter are not linked and are not missing terms
     for i in range(len(infParam)):
         param = set(infParam[i])
         if not set([i/_sage_const_2p0  for i in range(int(_sage_const_2 *min(param)),int(_sage_const_2 *max(param))+_sage_const_1 , _sage_const_2 )]).issubset(param):
@@ -941,6 +1007,7 @@ def spec_matr(infParam, print_multis = False):
                 print("Infinitesimal parameter segments must not be linked")
                 return
     
+    # Display the spectral matrix
     display_SpecMatrix(infParam, print_multis = print_multis)
     
     

@@ -1955,7 +1955,7 @@ def standard_String(multi):
     
     # Create a string for inducing from the appropriate parabolic subgroup if there is more than one segment
     if len(segments) > 1 or multi_dict[segments[0]] > 1:
-        latex_str = r"$\text{ind}_{P_{" + ",".join(lengths_strs) + r"}}^{GL(" + str(N) + r")}\left("
+        latex_str = r"$\text{I}_{P_{" + ",".join(lengths_strs) + r"}}^{GL(" + str(N) + r")}\left("
         for i in range(len(segments)):
             # Obtain the standard module for the current segment and add it to the string
             # for the number of times that segment appears in the multisegment

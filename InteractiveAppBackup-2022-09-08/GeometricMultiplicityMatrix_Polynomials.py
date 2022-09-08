@@ -779,7 +779,7 @@ def display_GeomMatrix(infParam, print_orbs = False, polynomials = False):
                 intermediate = inter_pol.constant_coefficient()
                 for k in range(_sage_const_2 ,int(dim_dict[rankTriagsSorted[i]]+_sage_const_1 ),_sage_const_2 ):
                     intermediate += t**(int(k//_sage_const_2 ))*inter_pol.coefficient(t**(-k))
-                latex_str += str(intermediate)#  str(IC_dict[rankTriagsSorted[j]])
+                latex_str += re.sub(r'(\d+)',r'{\1}', str(intermediate)).replace(r"*","")#  str(IC_dict[rankTriagsSorted[j]])
             else:
                 if len(shift_dict.keys()) > _sage_const_0 :
                     for k in range(len(shift_dict.keys())):

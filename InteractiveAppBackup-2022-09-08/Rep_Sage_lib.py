@@ -1919,7 +1919,7 @@ def standard_seg(seg):
     if seg.get_length() == 1:
         latex_str = r"\nu^{" + str(int(2*seg.get_segment_lower())/2) + r"}"
     elif seg.get_length() > 1:
-        latex_str = r"Q\left(\text{ind}_{B}^{GL(" + str(int(seg.get_length())) + r")}\left("
+        latex_str = r"Q\left(\text{I}_{B}^{GL(" + str(int(seg.get_length())) + r")}\left("
         for i in range(int(2*seg.get_segment_lower()), int(2*seg.get_segment_upper() + 1), 2):
             latex_str += r" \nu^{" + str(i/2) + "} "
             if i < int(2*seg.get_segment_upper()):
